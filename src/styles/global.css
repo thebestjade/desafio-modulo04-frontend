@@ -1,0 +1,46 @@
+@import './alignments.css';
+@import './margins.css';
+@import './buttons.css';
+@import './texts.css';
+@import './colors.css';
+
+body {
+    margin: 0px;
+    font-family: 'Montserrat', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: antialiased;
+}
+
+code {
+    font-family: 'Montserrat', sans-serif;
+}
+
+a {
+    text-decoration: none;
+}
+
+button {
+    height: 50px;
+    border-radius: 10px;
+}
+
+input[type='text'], input[type='password']{
+    width: 300px;
+    height: 45px;
+    border-radius: 10px;
+    border: 2px solid rgb(27, 26, 42, 0.29);
+    font-size: 16px;
+    padding: 5px 10px;
+}
+
+
+input[type='checkbox'] {
+    width: 30px;
+    height: 30px;
+    position: relative;
+    left: 0px;
+    top: 10px;
+    vertical-align: middle;
+    margin-right: 10px;
+    cursor: pointer;
+}
