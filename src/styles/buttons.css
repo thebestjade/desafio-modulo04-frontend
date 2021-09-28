@@ -1,5 +1,8 @@
 .btn-dark-blue {
-    background-color: #1b1a34;
+    background: rgba(218, 1, 117, 0.35);
+    border-radius: 20px;
+    padding: 11px 60px;
     color: white;
-    width: 325px;
+    border: none;
+    width: 166px;
 }
