@@ -8,7 +8,7 @@ import SubmitButton from '../../components/SubmitButton';
 function Login() {
      return(
         <div className='container-form flex-column'>
-            <form className='form form-login'>
+            <form className='form'>
                 <div className='text-center mb-lg'>
                     <img className='logo-form' src={Logo} alt="Logo da Cubos Academy" />
                 </div>
@@ -18,10 +18,10 @@ function Login() {
                         <input id='email' type="text" placeholder='exemplo@gmail.com' />
                     </div>
                     <InputPassword />
-                    <SubmitButton />
+                    <SubmitButton label='Entrar' />
                 </div>
             </form>
-            <AccessLink />
+            <AccessLink text='Não tem uma conta? ' label='Cadastre-se' url='/cadastre' />
         </div> 
     )
 }

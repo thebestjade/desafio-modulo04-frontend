@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom';
 import './styles.css'
 
-function AccessLink() {
+function AccessLink({ text, label, url }) {
     return(
         <div className='mt-lg'>
-            <span>Não tem uma conta? </span>
-            <Link className='link' to='/cadastre'>Cadastre-se</Link>
+            <span>{text}</span>
+            <Link className='link' to={url}>{label}</Link>
         </div>
     );
 }

@@ -1,9 +1,9 @@
 import './styles.css'
            
-function SubmitButton() {
+function SubmitButton({ label }) {
     return(
         <div>
-            <button className='btn-dark-blue mt-lg'>Entrar</button>
+            <button className='btn-dark-blue mt-lg'>{label}</button>
         </div>
     );
 }

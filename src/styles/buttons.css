@@ -4,5 +4,8 @@
     padding: 11px 60px;
     color: white;
     border: none;
-    width: 166px;
+    width: 200px;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: 'Montserrat', sans-serif;
 }
