@@ -1,0 +1,10 @@
+.container-home {
+    width: 100vw;
+}
+
+.header {
+    width: 410px;
+    height: 80px;
+    background: #374952;
+    border-radius: 16px 16px 0px 0px;
+}

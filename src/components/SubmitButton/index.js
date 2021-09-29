@@ -3,7 +3,7 @@ import './styles.css'
 function SubmitButton({ label }) {
     return(
         <div>
-            <button className='btn-dark-blue mt-lg'>{label}</button>
+            <button className='btn-disabled-primary mt-lg'>{label}</button>
         </div>
     );
 }

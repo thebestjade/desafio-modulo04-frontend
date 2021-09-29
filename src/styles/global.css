@@ -3,6 +3,7 @@
 @import './buttons.css';
 @import './texts.css';
 @import './colors.css';
+@import './paddings.css';
 
 body {
     margin: 0px;

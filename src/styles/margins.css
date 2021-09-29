@@ -45,3 +45,14 @@
 .my-lg {
     margin: 30px 0px;
 }
+.mr-sm {
+    margin-right: 5px;
+}
+
+.mr-md {
+    margin-right: 16px;
+}
+
+.mr-lg {
+    margin-right: 30px;
+}

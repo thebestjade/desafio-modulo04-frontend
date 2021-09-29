@@ -1,3 +1,27 @@
 .container-home {
     text-align: center;
 }
+
+.side-bar {
+    width: 264px;
+    height: 100vh;
+    background-color: #263238;
+    position: absolute;
+}
+
+.alignment-button {
+    display: flex;
+    align-items: center;
+    padding-left: 65px;
+}
+
+.nav-bar {
+    margin-left: auto;
+}
+
+.img-profile {
+    margin-top: 32px;
+    margin-right: 54px;
+    width: 40px;
+    margin-left: auto;
+}
