@@ -23,7 +23,7 @@ function Home() {
         </div>
       </div>
       <img className='img-profile' src={Profile} alt="Imagem de perfil" />
-      {/* <ContainerHome label='Clientes' /> */}
+      <ContainerHome label='Clientes' />
     </div>
   );
 }
