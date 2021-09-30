@@ -19,3 +19,11 @@
 .grid-gap-mid {
     column-gap: 40px;
 }
+
+.align-self-end {
+    align-self: end;
+}
+
+.content-around {
+    justify-content: space-around;
+}

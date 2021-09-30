@@ -1,3 +1,26 @@
+.container-client {
+    width: 100%;
+    text-align: end;
+}
+
+.container-form-client {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    text-align: end;
+}
+
+.side-bar-client {
+    width: 264px;
+    background-color: #263238;
+
+}
+
+.form-gap {
+    gap: 28px;
+}
+
 .width-lg {
     width: 512px !important;
 }
@@ -16,14 +39,12 @@
     border-radius: 8px;
 }
 
-.container-form-client {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    text-align: end;
-}
-
-.form-gap {
-    gap: 28px;
+.title-form-h5 {
+    margin-right: 350px;
+    margin-bottom: 25px;
+    font-family: Montserrat;
+    font-size: 24px;
+    line-height: 29px;
+    text-transform: uppercase;
+    font-family: 'Montserrat';
 }

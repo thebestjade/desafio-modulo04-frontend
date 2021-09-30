@@ -60,3 +60,7 @@
 .ml-auto {
     margin-left: auto;
 }
+
+.gap-sm {
+    gap: 16px;
+}
