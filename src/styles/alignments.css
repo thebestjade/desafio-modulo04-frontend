@@ -15,3 +15,7 @@
 .items-center {
     align-items: center;
 }  
+
+.grid-gap-mid {
+    column-gap: 40px;
+}

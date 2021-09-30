@@ -1,0 +1,29 @@
+.width-lg {
+    width: 512px !important;
+}
+
+.width-mid {
+    width: 240px !important;
+}
+
+.label-form {
+    text-align: initial;
+}
+
+.input-form {
+    border: 1px solid #374952 !important;
+    box-sizing: border-box;
+    border-radius: 8px;
+}
+
+.container-form-client {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    text-align: end;
+}
+
+.form-gap {
+    gap: 28px;
+}

@@ -7,14 +7,17 @@ import {
 import Home from './pages/Home';
 import Cadastre from './pages/Cadastre';
 import Login from './pages/Login';
+import Client from './pages/Client';
+
 
 function Routes() {
     return(
         <Router>
             <Switch>
                 <Route path='/' exact component={Home} />
-                <Route path='/cadastre' component={Cadastre} />
+                <Route path='/cadastro' component={Cadastre} />
                 <Route path='/login' component={Login} />
+                <Route path='/clientes' component={Client} />
             </Switch>
         </Router>
     );

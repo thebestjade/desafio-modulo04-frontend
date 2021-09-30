@@ -2,11 +2,11 @@ import './styles.css'
            
 function ContainerHome({ label }) {
     return(
-        <div className='container-home'>
-            <div className='header'>
+        <div className='flex-column'>
+            <div className='container-header'>
                 <h5>{label}</h5>
             </div>
-            <div className='body'>
+            <div className='body container-body'>
 
             </div>
         </div>

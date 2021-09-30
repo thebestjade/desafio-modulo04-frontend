@@ -1,29 +1,26 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome } from '@fortawesome/free-solid-svg-icons';
-
-import Logo from '../../assets/logo-white.svg';
 import Profile from '../../assets/img-profile.svg';
 import ContainerHome from '../../components/ContainerHome';
+import MenuSideBar from '../../components/MenuSideBar';
+import Logo from '../../assets/logo-white.svg';
+
 import './styles.css';
 
 function Home() {
   return (
-    <div className="container-home flex-column">
+    <div className="container-home flex-row">
       <div className='side-bar' >
         <img className='logo-form pt-md' src={Logo} alt="Logo da Cubos Academy" />
-        <div>
-          <button className='btn-enable-secundary alignment-button' > 
-            <FontAwesomeIcon 
-              className='mr-md'
-              icon={faHome}
-              size='2x'
-            />
-            HOME
-          </button>
+        <MenuSideBar  label='HOME' icon='faHome' />
+        <MenuSideBar  label='CONTRATAÇÕES' />
+        <MenuSideBar  label='CLIENTES' />
+      </div>
+      <div className='body container-home'>
+        <img className='img-profile' src={Profile} alt="Imagem de perfil" />
+        <div className='flex-row content-center grid-gap-mid container-margin-lg'>
+          <ContainerHome label='Clientes' />
+          <ContainerHome label='Cobranças' />
         </div>
       </div>
-      <img className='img-profile' src={Profile} alt="Imagem de perfil" />
-      <ContainerHome label='Clientes' />
     </div>
   );
 }
