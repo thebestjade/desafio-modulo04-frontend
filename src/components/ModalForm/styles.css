@@ -13,7 +13,7 @@
     padding: 200px;
     min-width: 460px;
     overflow: auto;
-    position: absolute;
+    height: 10vh;
 }
 
 a {

@@ -10,6 +10,21 @@
     font-family: 'Montserrat', sans-serif;
 }
 
+.btn-enable-primary {
+    margin-top: 250px;
+    background: #DA0175;
+    border-radius: 20px;
+    padding: 11px 60px;
+    color: white;
+    border: none;
+    width: 226px;
+    height: 39px;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+}
+
 .btn-enable-secundary {
     width: 100%;
     height: 47px;

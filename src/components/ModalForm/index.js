@@ -14,7 +14,7 @@ function ModalForm() {
                 <div className='flex-column  content-center items-center'>
                     <div className='flex-column'>
                         <label htmlFor='name'>Nome</label>
-                        <input id='email' type="text" placeholder='exemplo@gmail.com' />
+                        <input id='name' type="text"/>
                     </div>
                     <div className='flex-column'>
                         <label htmlFor='email'>E-mail</label>
@@ -23,11 +23,11 @@ function ModalForm() {
                     <InputPassword />
                     <div className='flex-column'>
                         <label htmlFor='phone'>Telefone</label>
-                        <input id='email' type="text" placeholder='exemplo@gmail.com' />
+                        <input id='phone' type="text"/>
                     </div>
                     <div className='flex-column'>
                         <label htmlFor='cpf'>CPF</label>
-                        <input id='email' type="text" placeholder='exemplo@gmail.com' />
+                        <input id='cpf' type="text" />
                     </div>
                     <SubmitButton label='Editar conta' />
                 </div>

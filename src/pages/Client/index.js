@@ -9,11 +9,12 @@ import ButtonProfile from '../../components/ButtonProfile';
 function Client() {
     return (
         <div className="container-client flex-row">
-            <div className='side-bar-client' >
+            <div className='side-bar-client text-center' >
                 <img className='logo-form pt-md' src={Logo} alt="Logo da Cubos Academy" />
                 <MenuSideBar label='HOME' icon='faHome' />
                 <MenuSideBar label='CONTRATAÇÕES' />
                 <MenuSideBar label='CLIENTES' url='/clientes' />
+                <button className='btn-enable-primary items-center'>Criar cobrança</button>
             </div>
             <div className='container-form-client flex-column'>
                 <ButtonProfile />

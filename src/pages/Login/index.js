@@ -21,7 +21,7 @@ function Login() {
                     <SubmitButton label='Entrar' />
                 </div>
             </form>
-            <AccessLink text='Não tem uma conta? ' label='Cadastre-se' url='/cadastre' />
+            <AccessLink text='Não tem uma conta? ' label='Cadastre-se' url='/cadastro' />
         </div> 
     )
 }
