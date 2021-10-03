@@ -17,6 +17,8 @@ import Home from './pages/Home';
 import Cadastre from './pages/Cadastre';
 import Login from './pages/Login';
 import Client from './pages/Client';
+import EditUser from './pages/EditUser';
+import Charges from './pages/Charges';
 
 function ProtectedRoutes(props) {
     const { token } = useContext(TokenContext);
@@ -46,8 +48,10 @@ function Routes() {
                     <UserProvider>
                         <ClientsProvider>
                             <ProtectedRoutes>
-                                <Route path='/clientes' exact component={Client} />
+                                <Route path='/adicionarCliente' exact component={Client} />
                                 <Route path='/' exact component={Home} />
+                                <Route path="/editarUsuario" exact component={EditUser} />
+                                <Route path="/contratacoes" exact component={Charges} />
                             </ProtectedRoutes>
                         </ClientsProvider>
                         <RedirectToHome>

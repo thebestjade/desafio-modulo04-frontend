@@ -10,7 +10,7 @@
     font-family: 'Montserrat', sans-serif;
 }
 
-.btn-enable-primary {
+.btn-enable-charges {
     margin-top: 250px;
     background: #DA0175;
     border-radius: 20px;
@@ -23,6 +23,19 @@
     font-size: 14px;
     font-family: 'Montserrat', sans-serif;
     font-weight: 600;
+}
+
+
+.btn-enable-primary {
+    background: #DA0175;
+    border-radius: 20px;
+    padding: 11px 60px;
+    color: white;
+    border: none;
+    width: 200px;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .btn-enable-secundary {
