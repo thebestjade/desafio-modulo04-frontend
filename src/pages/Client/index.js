@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/jsx-no-comment-textnodes */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation } from 'react-router';
 import { useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -23,6 +24,8 @@ import IconHome from "../../assets/IconHome";
 import IconMoney from "../../assets/IconMoney";
 import IconUser from "../../assets/IconUser";
 
+import { getCityByCep } from '../../services/viaCep'
+
 function Client() {
     const location = useLocation();
     const classes = useStyles();
@@ -33,6 +36,48 @@ function Client() {
     } = useForm();
     const [loading, setLoading] = useState(false);
     const [reqError, setReqError] = useState("");
+
+
+    const [cep, setCep] = useState("");
+    const [city, setCity] = useState("");
+    const [district, setDistrict] = useState("");
+    const [street, setStreet] = useState("");
+
+
+    async function loadCityByCep(myCep) {
+        const [localidade, logradouro, bairro] = await getCityByCep(myCep);
+        if (!logradouro) {
+            return;
+        }
+
+        console.log(logradouro);
+        console.log(bairro);
+
+        setCity(logradouro);
+        setDistrict(bairro);
+        setStreet(localidade);
+    }
+
+    useEffect(() => {
+
+        if (cep.length < 9 && city.length > 0) {
+            setCity('');
+        }
+
+        if (cep.indexOf('-') !== -1) {
+            if (cep.length === 9) {
+                loadCityByCep(cep);
+            }
+            return;
+        }
+
+        if (cep.length === 8) {
+            loadCityByCep(cep);
+        }
+
+    }, [cep])
+
+
 
     async function addClient(addData) {
 
@@ -133,22 +178,47 @@ function Client() {
                         <div className='flex-row form-gap' >
                             <div className='flex-column'>
                                 <label htmlFor='cep'>CEP</label>
-                                <input className='input-form width-mid' id='cep' type="text" />
+                                <input
+                                    className='input-form width-mid'
+                                    id='cep'
+                                    type="text"
+                                    value={cep}
+                                    maxLength={9}
+                                    onChange={(e) => setCep(e.target.value)}
+                                />
                             </div>
                             <div className='flex-column'>
                                 <label htmlFor='street'>Logradouro</label>
-                                <input className='input-form width-mid' id='street' type="text" />
+                                <input
+                                    className='input-form width-mid'
+                                    id='street'
+                                    type="text"
+                                    value={street}
+                                    onChange={(e) => setStreet(e.target.value)}
+                                />
                             </div>
                         </div>
                         <div className='flex-row form-gap' >
 
                             <div className='flex-column'>
                                 <label htmlFor='local'>Bairro</label>
-                                <input className='input-form width-mid' id='local' type="text" />
+                                <input
+                                    className='input-form width-mid'
+                                    id='local'
+                                    type="text"
+                                    value={district}
+                                    onChange={(e) => setDistrict(e.target.value)}
+                                />
                             </div>
                             <div className='flex-column'>
                                 <label htmlFor='city'>Cidade</label>
-                                <input className='input-form width-mid' id='city' type="text" />
+                                <input
+                                    className='input-form width-mid'
+                                    id='city'
+                                    type="text"
+                                    value={city}
+                                    onChange={(e) => setCity(e.target.value)}
+                                />
                             </div>
                         </div>
                         <div className='flex-row form-gap' >
@@ -174,7 +244,7 @@ function Client() {
                             <SubmitButton
                                 label='Adicionar cliente'
                             />
-                            
+
                         </div>
                     </div>
                 </form>
