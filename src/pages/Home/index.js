@@ -9,7 +9,7 @@ function Home() {
     <div className="container-home flex-row">
       <div className='side-bar text-center' >
         <img className='logo-form pt-md' src={Logo} alt="Logo da Cubos Academy" />
-        <MenuSideBar label='HOME' icon='home' />
+        <MenuSideBar label='HOME'/>
         <MenuSideBar label='CONTRATAÇÕES' />
         <MenuSideBar label='CLIENTES' />
         <button className='btn-enable-primary items-center'>Criar cobrança</button>
