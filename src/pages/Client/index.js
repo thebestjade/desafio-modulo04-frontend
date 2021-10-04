@@ -44,6 +44,10 @@ function Client() {
     const [city, setCity] = useState("");
     const [district, setDistrict] = useState("");
     const [street, setStreet] = useState("");
+    const [name, setName] = useState(false);
+    const [email, setEmail] = useState(false);
+    const [cpf, setCpf] = useState(false);
+    const [fill, setFill] = useState(false);
 
 
     async function loadCityByCep(myCep) {
@@ -130,6 +134,13 @@ function Client() {
         setReqSuccess("");
     };
 
+    useEffect(() => {
+        if (email && name && cep && cpf) {
+            setFill(true);
+        }
+
+    }, [email, name, cep, cpf])
+
     return (
         <div className="container-client flex-row">
             <div className='side-bar-client text-center' >
@@ -167,6 +178,7 @@ function Client() {
                             <label htmlFor='name'>Nome</label>
                             <input
                                 {...register("nome", { required: true })}
+                                onBlur={(e) => setName(e.target.value)}
                                 className='input-form width-lg'
                                 id='name'
                                 type="text"
@@ -176,6 +188,7 @@ function Client() {
                             <label htmlFor='email'>E-mail</label>
                             <input
                                 {...register('email', { required: true })}
+                                onBlur={(e) => setEmail(e.target.value)}
                                 className='input-form width-lg'
                                 id='email'
                                 type="text"
@@ -186,6 +199,7 @@ function Client() {
                                 <label htmlFor='cpf'>CPF</label>
                                 <input
                                     {...register('cpf', { required: true })}
+                                    onBlur={(e) => setCpf(e.target.value)}
                                     maxLength={11}
                                     className='input-form width-mid' id='cpf' type="text" />
                             </div>
@@ -274,6 +288,7 @@ function Client() {
                             <button className='btn-cancel mt-lg'>Cancelar</button>
                             <SubmitButton
                                 label='Adicionar cliente'
+                                color={fill && '#DA0175'}
                             />
                         </div>
                     </div>

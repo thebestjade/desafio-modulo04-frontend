@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-no-comment-textnodes */
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
@@ -31,6 +31,13 @@ function EditUser() {
     const [loading, setLoading] = useState(false);
     const [reqError, setReqError] = useState("");
     const [reqSuccess, setReqSuccess] = useState("");
+
+    const [name, setName] = useState(false);
+    const [email, setEmail] = useState(false);
+    const [phone, setPhone] = useState(false);
+    const [cpf, setCpf] = useState(false);
+    const [fill, setFill] = useState(false);
+
 
     async function updateUser(updateData) {
 
@@ -76,6 +83,13 @@ function EditUser() {
         setReqSuccess("");
     };
 
+    useEffect(() => {
+        if (email && name && phone && cpf) {
+            setFill(true);
+        }
+
+    }, [email, name, phone, cpf])
+
     return (
         <div >
             <Home />
@@ -92,12 +106,14 @@ function EditUser() {
                             <label htmlFor='nome'>Nome</label>
                             <input
                                 {...register('nome', { required: true })}
+                                onBlur={(e) => setName(e.target.value)}
                                 id='nome' type="text" />
                         </div>
                         <div className='flex-column'>
                             <label htmlFor='email'>E-mail</label>
                             <input
                                 {...register('email', { required: true })}
+                                onBlur={(e) => setEmail(e.target.value)}
                                 id='email' type="text"
                                 placeholder='exemplo@gmail.com'
                             />
@@ -113,6 +129,7 @@ function EditUser() {
                             <label htmlFor='phone'>Telefone</label>
                             <input
                                 {...register("telefone")}
+                                onBlur={(e) => setPhone(e.target.value)}
                                 maxLength={10}
                                 id='phone' type="text" />
                         </div>
@@ -120,6 +137,7 @@ function EditUser() {
                             <label htmlFor='cpf'>CPF</label>
                             <input
                                 {...register("cpf")}
+                                onBlur={(e) => setCpf(e.target.value)}
                                 maxLength={11}
                                 id='cpf' type="text" />
                         </div>
@@ -139,6 +157,7 @@ function EditUser() {
                         </Backdrop>
                         <SubmitButton
                             label='Editar conta'
+                            color={fill && '#DA0175'}
                         />
 
                     </div>

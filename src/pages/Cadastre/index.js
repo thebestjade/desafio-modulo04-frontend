@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useHistory } from 'react-router';
 import { useForm } from "react-hook-form";
 import {
@@ -27,6 +27,10 @@ function Cadastre() {
 
     const [loading, setLoading] = useState(false);
     const [reqError, setReqError] = useState("");
+    const [name, setName] = useState(false);
+    const [email, setEmail] = useState(false);
+    const [fill, setFill] = useState(false);
+
     const [reqSuccess, setReqSuccess] = useState("");
 
 
@@ -37,7 +41,7 @@ function Cadastre() {
             setLoading(true);
             setReqError("");
             setReqSuccess("");
-
+        
             console.log(formData);
             const response = await fetch('https://desafio04-backend.herokuapp.com/cadastrarUsuario', {
                 method: 'POST',
@@ -76,6 +80,14 @@ function Cadastre() {
         setReqSuccess("");
     };
 
+    useEffect(() => {
+        if (email && name) {
+            setFill(true);
+        }
+
+    }, [email, name])
+
+
     return (
         <div className='container-form-cadastre flex-column'>
             <form className='form' onSubmit={handleSubmit(Register)}>
@@ -85,9 +97,19 @@ function Cadastre() {
                 <div className='flex-column  content-center items-center'>
                     <div className='flex-column'>
                         <label htmlFor='nome'>Nome</label>
-                        <input {...register('nome', { required: true })} id='name' type="text" />
+                        <input
+                            {...register('nome', { required: true })}
+                            onBlur={(e) => setName(e.target.value)}
+                            id='name'
+                            type="text"
+                        />
                         <label htmlFor='email'>E-mail</label>
-                        <input {...register('email', { required: true })} id='email' type="text" placeholder='exemplo@gmail.com' />
+                        <input
+                            {...register('email', { required: true })}
+                            onBlur={(e) => setEmail(e.target.value)}
+                            id='email' type="text"
+                            placeholder='exemplo@gmail.com'
+                        />
                     </div>
                     <InputPassword
                         error={!!errors.senha}
@@ -99,7 +121,7 @@ function Cadastre() {
                     </Alert>)}
 
                     {reqError && (<Alert severity="error" onClose={closeAlert}>
-                        {reqError} 
+                        {reqError}
                     </Alert>)}
 
                     <Backdrop
@@ -108,7 +130,10 @@ function Cadastre() {
                         <CircularProgress color="inherit" />
                     </Backdrop>
 
-                    <SubmitButton label='Criar conta' />
+                    <SubmitButton
+                        color={fill && '#DA0175'}
+                        label='Criar conta'
+                    />
                 </div>
             </form>
             <AccessLink text='Já possui uma conta? ' label='Acesse agora' url='/login' />
