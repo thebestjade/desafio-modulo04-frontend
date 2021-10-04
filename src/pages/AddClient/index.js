@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useLocation } from 'react-router';
 import { useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -17,20 +17,21 @@ import IconUser from "../../assets/IconUser";
 import { toast } from 'react-toastify';
 import useStyles from "../../styles/useStyles";
 import getCityByCep from '../../services/viaCep';
+import TokenContext from "../../contexts/token/TokenContext";
 
 import './styles.css';
 import '../../styles/form.css';
 
 
 function Client() {
+    const { token } = useContext(TokenContext);
     const location = useLocation();
     const classes = useStyles();
     const history = useHistory();
     const {
         handleSubmit,
-        register,
-    } = useForm();
-
+        register, formState: { isValid }
+    } = useForm({ mode: 'onChange' });
     const [loading, setLoading] = useState(false);
     const [reqError, setReqError] = useState("");
     const [reqSuccess, setReqSuccess] = useState("");
@@ -39,16 +40,13 @@ function Client() {
     const [city, setCity] = useState("");
     const [district, setDistrict] = useState("");
     const [street, setStreet] = useState("");
-    const [name, setName] = useState(false);
-    const [email, setEmail] = useState(false);
-    const [cpf, setCpf] = useState(false);
-    const [fill, setFill] = useState(false);
+    const [state, setState] = useState("");
 
 
     async function loadCityByCep(myCep) {
-        const { localidade, logradouro, bairro } = await getCityByCep(myCep);
-        console.log(logradouro);
-        if (!logradouro) {
+
+        const { localidade, logradouro, bairro, uf } = await getCityByCep(myCep);
+        if (!localidade) {
             toast.error("Falha ao encontrar cidade", {
                 position: "top-right",
                 autoClose: 5000,
@@ -59,31 +57,25 @@ function Client() {
             });
             return;
         }
-        setCity(logradouro);
+        setCity(localidade);
         setDistrict(bairro);
-        setStreet(localidade);
+        setStreet(logradouro);
+        setState(uf);
     }
 
     useEffect(() => {
 
-        if (cep.length < 9 && city.length > 0) {
-            setCity('');
-            setDistrict('');
-            setStreet('');
-        }
-
         if (cep.indexOf('-') !== -1) {
-            if (cep.length === 9) {
+            const cepToSearch = cep.trim().replace('-', '');
+            if (cepToSearch.length === 8) {
+                loadCityByCep(cepToSearch);
+            }
+        } else {
+            if (cep.length === 8) {
                 loadCityByCep(cep);
             }
-            return;
         }
-
-        if (cep.length === 8) {
-            loadCityByCep(cep);
-        }
-
-    }, [cep, city.length])
+    }, [cep])
 
 
 
@@ -97,12 +89,13 @@ function Client() {
 
             const response = await fetch("https://desafio04-backend.herokuapp.com/cadastrarCliente", {
                 method: "POST",
-                mode: "cors",
                 cache: "no-cache",
                 credentials: "same-origin",
                 body: JSON.stringify(addData),
                 headers: {
                     "Content-type": "application/json",
+                    mode: "cors",
+                    Authorization: token,
                 },
             });
 
@@ -128,13 +121,6 @@ function Client() {
         setReqError("");
         setReqSuccess("");
     };
-
-    useEffect(() => {
-        if (email && name && cep && cpf) {
-            setFill(true);
-        }
-
-    }, [email, name, cep, cpf])
 
     return (
         <div className="container-client flex-row">
@@ -172,38 +158,37 @@ function Client() {
                         <div className='flex-column'>
                             <label htmlFor='name'>Nome</label>
                             <input
-                                {...register("nome", { required: true })}
-                                onBlur={(e) => setName(e.target.value)}
                                 className='input-form width-lg'
                                 id='name'
                                 type="text"
+                                {...register("nome", { required: true })}
                             />
                         </div>
                         <div className='flex-column'>
                             <label htmlFor='email'>E-mail</label>
                             <input
-                                {...register('email', { required: true })}
-                                onBlur={(e) => setEmail(e.target.value)}
                                 className='input-form width-lg'
                                 id='email'
                                 type="text"
+                                {...register('email', { required: true })}
                             />
                         </div>
                         <div className='flex-row form-gap' >
                             <div className='flex-column'>
                                 <label htmlFor='cpf'>CPF</label>
                                 <input
-                                    {...register('cpf', { required: true })}
-                                    onBlur={(e) => setCpf(e.target.value)}
                                     maxLength={11}
-                                    className='input-form width-mid' id='cpf' type="text" />
+                                    className='input-form width-mid' id='cpf' type="text"
+                                    {...register('cpf', { required: true })}
+                                />
                             </div>
                             <div className='flex-column'>
                                 <label htmlFor='phone'>Telefone</label>
                                 <input
-                                    {...register('phone', { required: true })}
-                                    maxLength={10}
-                                    className='input-form width-mid' id='phone' type="text" />
+                                    maxLength={11}
+                                    className='input-form width-mid' id='phone' type="text"
+                                    {...register('telefone', { required: true })}
+                                />
                             </div>
                         </div>
                         <div className='flex-row form-gap' >
@@ -230,7 +215,6 @@ function Client() {
                             </div>
                         </div>
                         <div className='flex-row form-gap' >
-
                             <div className='flex-column'>
                                 <label htmlFor='local'>Bairro</label>
                                 <input
@@ -256,14 +240,17 @@ function Client() {
                             <div className='flex-column'>
                                 <label htmlFor='complete'>Complemento</label>
                                 <input
+                                    className='input-form width-mid' id='complete' type="text"
                                     {...register('complemento')}
-                                    className='input-form width-mid' id='complete' type="text" />
+                                />
                             </div>
                             <div className='flex-column'>
-                                <label htmlFor='reference'>Ponto de referência</label>
+                                <label htmlFor='reference'>Estado</label>
                                 <input
-                                    {...register('referencia')}
-                                    className='input-form  width-mid' id='reference' type="text" />
+                                    className='input-form  width-mid' id='reference' type="text"
+                                    value={state}
+                                    onChange={(e) => setState(e.target.value)}
+                                />
                             </div>
                         </div>
 
@@ -280,10 +267,10 @@ function Client() {
                         </Backdrop>
 
                         <div className='flex-row form-gap ml-auto'>
-                            <button className='btn-cancel mt-lg'>Cancelar</button>
+                            <button className='btn-cancel mt-lg' onClick={()=> history.push('/')}>Cancelar</button>
                             <SubmitButton
                                 label='Adicionar cliente'
-                                color={fill && '#DA0175'}
+                                color={isValid && '#DA0175'}
                             />
                         </div>
                     </div>

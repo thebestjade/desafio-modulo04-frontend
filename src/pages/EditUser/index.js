@@ -9,6 +9,7 @@ import {
 import { Alert } from "@material-ui/lab";
 import Home from "../Home";
 import TokenContext from "../../contexts/token/TokenContext";
+import UserContext from "../../contexts/user/UserContext";
 import SubmitButton from '../../components/SubmitButton';
 import InputPassword from '../../components/InputPassword';
 
@@ -17,23 +18,42 @@ import '../Home/styles.css';
 import useStyles from "../../styles/useStyles";
 
 function EditUser() {
+
     const classes = useStyles();
     const history = useHistory();
     const {
         handleSubmit,
         register,
-        formState: { errors },
-    } = useForm();
+        formState: { isValid },
+    } = useForm({ mode: 'onChange' });
     const { token } = useContext(TokenContext);
+    const { user, setUser } = useContext(UserContext);
     const [loading, setLoading] = useState(false);
     const [reqError, setReqError] = useState("");
     const [reqSuccess, setReqSuccess] = useState("");
 
-    const [name, setName] = useState(false);
-    const [email, setEmail] = useState(false);
-    const [phone, setPhone] = useState(false);
-    const [cpf, setCpf] = useState(false);
-    const [fill, setFill] = useState(false);
+
+    useEffect(() => {
+        async function GetUser() {
+
+            setReqError('')
+
+            const response = await fetch("https://desafio04-backend.herokuapp.com/perfil", {
+                headers: {
+                    "Content-type": "application/json",
+                    mode: 'cors',
+                    Authorization: token,
+                },
+            });
+            const data = await response.json();
+            if (response.ok) {
+                return setUser(data);
+            }
+            setReqError(data);
+        }
+        GetUser();
+    }, [token, setUser]);
+
 
 
     async function updateUser(updateData) {
@@ -80,89 +100,85 @@ function EditUser() {
         setReqSuccess("");
     };
 
-    useEffect(() => {
-        if (email && name && phone && cpf) {
-            setFill(true);
-        }
-
-    }, [email, name, phone, cpf])
-
     return (
         <div >
             <Home />
-            <div className='container-form flex-column modal-form '>
-                <form className='form margin-top-modal' onSubmit={handleSubmit(updateUser)}>
-                    <a className='align-self-end' href='#close'
-                        onClick={() => history.push('/')}
-                    >x</a>
-                    <div className='text-center mb-lg'>
-                        <h4>// EDITAR USUÁRIO</h4>
+            {Object.keys(user).length &&
+                <>
+                    <div className='container-form flex-column modal-form '>
+                        <form className='form margin-top-modal' onSubmit={handleSubmit(updateUser)}>
+                            <a className='align-self-end' href='#close'
+                                onClick={() => history.push('/')}
+                            >x</a>
+                            <div className='text-center mb-lg'>
+                                <h4>// EDITAR USUÁRIO</h4>
+                            </div>
+                            <div className='flex-column  content-center items-center'>
+                                <div className='flex-column'>
+                                    <label htmlFor='nome'>Nome</label>
+                                    <input
+                                        id='nome' type="text"
+                                        defaultValue={user.name}
+                                        {...register('nome', { required: true })}
+                                    />
+                                </div>
+                                <div className='flex-column'>
+                                    <label htmlFor='email'>E-mail</label>
+                                    <input
+                                        id='email' type="text"
+                                        defaultValue={user.email}
+                                        {...register('email', { required: true })}
+                                    />
+
+                                </div>
+
+                                <div className='flex-column'>
+                                    <label htmlFor='phone'>Telefone</label>
+                                    <input
+                                        id='phone' type="text"
+                                        defaultValue={user.phone}
+                                        {...register("telefone")}
+                                    />
+                                </div>
+                                <div className='flex-column'>
+                                    <label htmlFor='cpf'>CPF</label>
+                                    <input
+                                        id='cpf' type="text"
+                                        defaultValue={user.cpf}
+                                        {...register("cpf")}
+                                    />
+                                </div>
+
+                                <InputPassword
+                                    register={() => register('senha')}
+                                />
+
+                                {reqSuccess && (<Alert severity="success" onClose={closeAlert}>
+                                    {reqSuccess}
+                                </Alert>)}
+
+                                {reqError && (<Alert severity="error" onClose={closeAlert}>
+                                    {reqError}
+                                </Alert>)}
+
+                                <Backdrop
+                                    className={classes.backdrop}
+                                    open={loading}>
+                                    <CircularProgress color="inherit" />
+                                </Backdrop>
+                                <SubmitButton
+                                    label='Editar conta'
+                                    color={isValid && '#DA0175'}
+                                />
+
+                            </div>
+                        </form>
                     </div>
-                    <div className='flex-column  content-center items-center'>
-                        <div className='flex-column'>
-                            <label htmlFor='nome'>Nome</label>
-                            <input
-                                {...register('nome', { required: true })}
-                                onBlur={(e) => setName(e.target.value)}
-                                id='nome' type="text" />
-                        </div>
-                        <div className='flex-column'>
-                            <label htmlFor='email'>E-mail</label>
-                            <input
-                                {...register('email', { required: true })}
-                                onBlur={(e) => setEmail(e.target.value)}
-                                id='email' type="text"
-                                placeholder='exemplo@gmail.com'
-                            />
-
-                        </div>
-
-                        <InputPassword
-                            error={!!errors.senha}
-                            register={() => register('senha', { required: true })}
-                        />
-
-                        <div className='flex-column'>
-                            <label htmlFor='phone'>Telefone</label>
-                            <input
-                                {...register("telefone")}
-                                onBlur={(e) => setPhone(e.target.value)}
-                                maxLength={10}
-                                id='phone' type="text" />
-                        </div>
-                        <div className='flex-column'>
-                            <label htmlFor='cpf'>CPF</label>
-                            <input
-                                {...register("cpf")}
-                                onBlur={(e) => setCpf(e.target.value)}
-                                maxLength={11}
-                                id='cpf' type="text" />
-                        </div>
-
-                        {reqSuccess && (<Alert severity="success" onClose={closeAlert}>
-                            {reqSuccess}
-                        </Alert>)}
-
-                        {reqError && (<Alert severity="error" onClose={closeAlert}>
-                            {reqError}
-                        </Alert>)}
-
-                        <Backdrop
-                            className={classes.backdrop}
-                            open={loading}>
-                            <CircularProgress color="inherit" />
-                        </Backdrop>
-                        <SubmitButton
-                            label='Editar conta'
-                            color={fill && '#DA0175'}
-                        />
-
-                    </div>
-                </form>
-            </div>
-            <Backdrop className={classes.backdrop} open={loading}>
-                <CircularProgress color="inherit" />
-            </Backdrop>
+                    <Backdrop className={classes.backdrop} open={loading}>
+                        <CircularProgress color="inherit" />
+                    </Backdrop>
+                </>
+            }
         </div>
     )
 }

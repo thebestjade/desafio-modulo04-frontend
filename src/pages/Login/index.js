@@ -24,23 +24,19 @@ function Login() {
     const {
         handleSubmit,
         register,
-        formState: { errors }
-    } = useForm();
-
+        formState: { isValid }
+    } = useForm({ mode: "onChange" });
     const [loading, setLoading] = useState(false);
     const [reqError, setReqError] = useState("");
-    const [fill, setFill] = useState(false);
-
     const useToken = useContext(TokenContext);
     const { setUser } = useContext(UserContext);
 
     async function loginUser(loginData) {
         try {
+
             setLoading(true);
             setReqError("");
-            setFill(false);
-
-            console.log(loginData);
+        
             const response = await fetch('https://desafio04-backend.herokuapp.com/login', {
                 method: 'POST',
                 mode: 'cors',
@@ -83,16 +79,14 @@ function Login() {
                     <div className='flex-column'>
                         <label htmlFor='email'>E-mail</label>
                         <input
-                            {...register('email', { required: true })}
                             id='email'
                             type="text"
                             placeholder='exemplo@gmail.com'
-                            onBlur={(e) => setFill(e.target.value)}
+                            {...register('email', { required: true })}
                         />
                     </div>
 
                     <InputPassword
-                        error={!!errors.senha}
                         register={() => register('senha', { required: true })}
                     />
 
@@ -104,7 +98,7 @@ function Login() {
 
                     <SubmitButton
                         label='Entrar'
-                        color={fill && '#DA0175'}
+                        color={isValid && '#DA0175'}
                     />
 
                     <Backdrop

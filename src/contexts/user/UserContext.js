@@ -1,8 +1,8 @@
 import { createContext } from 'react';
 
 export const UserContext = createContext({
-  usuario:[],
-  setUsuario: null
+  user:[],
+  serUser: null
 })
 
 
