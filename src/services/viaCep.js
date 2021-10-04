@@ -10,7 +10,7 @@ async function getCityByCep(cep) {
             return false;
         }
 
-        return [localidade, logradouro, bairro];
+        return {localidade, logradouro, bairro};
     } catch (error) {
         return false;
     }

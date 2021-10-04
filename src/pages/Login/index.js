@@ -33,7 +33,6 @@ function Login() {
     const useToken = useContext(TokenContext);
     const { setUser } = useContext(UserContext);
 
-
     async function loginUser(loginData) {
         try {
             setLoading(true);
@@ -86,6 +85,7 @@ function Login() {
                             id='email'
                             type="text"
                             placeholder='exemplo@gmail.com'
+                            onChange={(e) => (e.target.value)}
                         />
                     </div>
                     <InputPassword

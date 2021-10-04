@@ -5,7 +5,8 @@ function SubmitButton({ label, color }) {
         <div>
             <button
                 className='btn-disabled-primary mt-lg width-mid'
-                style={{backgroundColor: color}}>
+                style={{backgroundColor: color}}
+                >
                 {label}
             </button>
         </div>

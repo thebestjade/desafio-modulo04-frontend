@@ -23,6 +23,7 @@ import ButtonProfile from '../../components/ButtonProfile';
 import IconHome from "../../assets/IconHome";
 import IconMoney from "../../assets/IconMoney";
 import IconUser from "../../assets/IconUser";
+import { toast } from 'react-toastify';
 
 import { getCityByCep } from '../../services/viaCep'
 
@@ -34,9 +35,10 @@ function Client() {
         handleSubmit,
         register,
     } = useForm();
+
     const [loading, setLoading] = useState(false);
     const [reqError, setReqError] = useState("");
-
+    const [reqSuccess, setReqSuccess] = useState("");
 
     const [cep, setCep] = useState("");
     const [city, setCity] = useState("");
@@ -45,14 +47,19 @@ function Client() {
 
 
     async function loadCityByCep(myCep) {
-        const [localidade, logradouro, bairro] = await getCityByCep(myCep);
+        const { localidade, logradouro, bairro } = await getCityByCep(myCep);
+        console.log(logradouro);
         if (!logradouro) {
+            toast.error("Falha ao encontrar cidade", {
+                position: "top-right",
+                autoClose: 5000,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                hideProgressBar: false,
+            });
             return;
         }
-
-        console.log(logradouro);
-        console.log(bairro);
-
         setCity(logradouro);
         setDistrict(bairro);
         setStreet(localidade);
@@ -62,6 +69,8 @@ function Client() {
 
         if (cep.length < 9 && city.length > 0) {
             setCity('');
+            setDistrict('');
+            setStreet('');
         }
 
         if (cep.indexOf('-') !== -1) {
@@ -84,6 +93,8 @@ function Client() {
         try {
             setLoading(true);
             setReqError("");
+            setReqSuccess("");
+
 
             const response = await fetch("https://desafio04-backend.herokuapp.com/editarUsuario", {
                 method: "POST",
@@ -97,11 +108,15 @@ function Client() {
             });
 
             const data = await response.json();
-
             setLoading(false);
 
             if (response.ok) {
-                return history.push("/clientes");
+                setReqSuccess(data);
+                const timer = setTimeout(() => {
+                    history.push('/');
+                    clearTimeout(timer);
+                }, 2000);
+                return;
             }
 
             setReqError(data);
@@ -112,6 +127,7 @@ function Client() {
 
     const closeAlert = () => {
         setReqError("");
+        setReqSuccess("");
     };
 
     return (
@@ -168,11 +184,17 @@ function Client() {
                         <div className='flex-row form-gap' >
                             <div className='flex-column'>
                                 <label htmlFor='cpf'>CPF</label>
-                                <input className='input-form width-mid' id='cpf' type="text" />
+                                <input
+                                    {...register('cpf', { required: true })}
+                                    maxLength={11}
+                                    className='input-form width-mid' id='cpf' type="text" />
                             </div>
                             <div className='flex-column'>
                                 <label htmlFor='phone'>Telefone</label>
-                                <input className='input-form width-mid' id='phone' type="text" />
+                                <input
+                                    {...register('phone', { required: true })}
+                                    maxLength={10}
+                                    className='input-form width-mid' id='phone' type="text" />
                             </div>
                         </div>
                         <div className='flex-row form-gap' >
@@ -224,34 +246,39 @@ function Client() {
                         <div className='flex-row form-gap' >
                             <div className='flex-column'>
                                 <label htmlFor='complete'>Complemento</label>
-                                <input className='input-form width-mid' id='complete' type="text" />
+                                <input
+                                    {...register('complemento')}
+                                    className='input-form width-mid' id='complete' type="text" />
                             </div>
                             <div className='flex-column'>
                                 <label htmlFor='reference'>Ponto de referência</label>
-                                <input className='input-form  width-mid' id='reference' type="text" />
+                                <input
+                                    {...register('referencia')}
+                                    className='input-form  width-mid' id='reference' type="text" />
                             </div>
                         </div>
 
-                        {reqError && (
-                            <Alert severity="error" onClose={closeAlert}>
-                                {reqError}
-                            </Alert>
-                        )}
+                        {reqSuccess && (<Alert severity="success" onClose={closeAlert}>
+                            {reqSuccess}
+                        </Alert>)}
+
+                        {reqError && (<Alert severity="error" onClose={closeAlert}>
+                            {reqError}
+                        </Alert>)}
+
+                        <Backdrop className={classes.backdrop} open={loading}>
+                            <CircularProgress color="inherit" />
+                        </Backdrop>
 
                         <div className='flex-row form-gap ml-auto'>
                             <button className='btn-cancel mt-lg'>Cancelar</button>
-
                             <SubmitButton
                                 label='Adicionar cliente'
                             />
-
                         </div>
                     </div>
                 </form>
 
-                <Backdrop className={classes.backdrop} open={loading}>
-                    <CircularProgress color="inherit" />
-                </Backdrop>
 
             </div>
         </div>

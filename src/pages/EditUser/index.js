@@ -27,15 +27,18 @@ function EditUser() {
         register,
         formState: { errors },
     } = useForm();
+    const { token } = useContext(TokenContext);
     const [loading, setLoading] = useState(false);
     const [reqError, setReqError] = useState("");
-    const { token } = useContext(TokenContext);
+    const [reqSuccess, setReqSuccess] = useState("");
 
     async function updateUser(updateData) {
 
         try {
             setLoading(true);
             setReqError("");
+            setReqSuccess("");
+
 
             const response = await fetch("https://desafio04-backend.herokuapp.com/editarUsuario", {
                 method: "PUT",
@@ -54,7 +57,12 @@ function EditUser() {
             setLoading(false);
 
             if (response.ok) {
-                return history.push("/usuarios");
+                setReqSuccess(data);
+                const timer = setTimeout(() => {
+                    history.push('/');
+                    clearTimeout(timer);
+                }, 2000);
+                return;
             }
 
             setReqError(data);
@@ -65,6 +73,7 @@ function EditUser() {
 
     const closeAlert = () => {
         setReqError("");
+        setReqSuccess("");
     };
 
     return (
@@ -80,10 +89,10 @@ function EditUser() {
                     </div>
                     <div className='flex-column  content-center items-center'>
                         <div className='flex-column'>
-                            <label htmlFor='name'>Nome</label>
+                            <label htmlFor='nome'>Nome</label>
                             <input
-                                {...register("nome")}
-                                id='name' type="text" />
+                                {...register('nome', { required: true })}
+                                id='nome' type="text" />
                         </div>
                         <div className='flex-column'>
                             <label htmlFor='email'>E-mail</label>
@@ -104,21 +113,30 @@ function EditUser() {
                             <label htmlFor='phone'>Telefone</label>
                             <input
                                 {...register("telefone")}
+                                maxLength={10}
                                 id='phone' type="text" />
                         </div>
                         <div className='flex-column'>
                             <label htmlFor='cpf'>CPF</label>
                             <input
                                 {...register("cpf")}
+                                maxLength={11}
                                 id='cpf' type="text" />
                         </div>
 
-                        {reqError && (
-                            <Alert severity="error" onClose={closeAlert}>
-                                {reqError}
-                            </Alert>
-                        )}
+                        {reqSuccess && (<Alert severity="success" onClose={closeAlert}>
+                            {reqSuccess}
+                        </Alert>)}
 
+                        {reqError && (<Alert severity="error" onClose={closeAlert}>
+                            {reqError}
+                        </Alert>)}
+
+                        <Backdrop
+                            className={classes.backdrop}
+                            open={loading}>
+                            <CircularProgress color="inherit" />
+                        </Backdrop>
                         <SubmitButton
                             label='Editar conta'
                         />

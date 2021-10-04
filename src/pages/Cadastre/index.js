@@ -74,7 +74,6 @@ function Cadastre() {
     const closeAlert = () => {
         setReqError("");
         setReqSuccess("");
-
     };
 
     return (
