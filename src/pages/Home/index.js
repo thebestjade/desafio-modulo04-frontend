@@ -47,7 +47,7 @@ function Home() {
       </div>
       <div className='body container-home'>
         <ButtonProfile />
-        <div className='containers content-center grid-gap-mid'>
+        <div className='containers content-center grid-gap-mid container-margin-lg'>
           <div className='flex-column'>
             <div className='flex-row items-center content-center gap-sm container-header'>
               {<IconUser />}

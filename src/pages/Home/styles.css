@@ -5,6 +5,7 @@
 
 .side-bar {
     width: 264px;
+    min-height: 100vh;
     background-color: #263238;
 }
 
