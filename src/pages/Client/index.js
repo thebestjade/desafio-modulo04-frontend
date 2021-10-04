@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable react/jsx-no-comment-textnodes */
 import React, { useState, useEffect } from "react";
 import { useLocation } from 'react-router';
 import { useHistory } from "react-router-dom";
@@ -18,7 +16,7 @@ import IconMoney from "../../assets/IconMoney";
 import IconUser from "../../assets/IconUser";
 import { toast } from 'react-toastify';
 import useStyles from "../../styles/useStyles";
-import { getCityByCep } from '../../services/viaCep'
+import getCityByCep from '../../services/viaCep';
 
 import './styles.css';
 import '../../styles/form.css';
@@ -85,7 +83,7 @@ function Client() {
             loadCityByCep(cep);
         }
 
-    }, [cep])
+    }, [cep, city.length])
 
 
 
@@ -168,7 +166,7 @@ function Client() {
             </div>
             <div className='container-form-client flex-column'>
                 <ButtonProfile />
-                <span className='title-form-h5'>// ADICIONAR CLIENTE</span>
+                <span className='title-form-h5'>ADICIONAR CLIENTE</span>
                 <form className='form width-lg label-form' onSubmit={handleSubmit(addClient)}>
                     <div className='flex-column  content-center items-center'>
                         <div className='flex-column'>

@@ -1,7 +1,6 @@
-/* eslint-disable react/jsx-no-comment-textnodes */
-import './styles.css';
 import Home from "../Home";
 
+import './styles.css';
 
 function Charges() {
     

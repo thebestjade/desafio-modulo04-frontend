@@ -2,21 +2,18 @@
 import React, { useContext, useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
-
 import {
     Backdrop,
     CircularProgress
 } from "@material-ui/core";
-
-import './styles.css';
-import '../Home/styles.css'
 import { Alert } from "@material-ui/lab";
-
 import Home from "../Home";
 import TokenContext from "../../contexts/token/TokenContext";
 import SubmitButton from '../../components/SubmitButton';
 import InputPassword from '../../components/InputPassword';
 
+import './styles.css';
+import '../Home/styles.css';
 import useStyles from "../../styles/useStyles";
 
 function EditUser() {

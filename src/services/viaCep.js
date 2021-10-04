@@ -15,5 +15,4 @@ async function getCityByCep(cep) {
         return false;
     }
 }
-
-module.exports = { getCityByCep }
+export default getCityByCep;

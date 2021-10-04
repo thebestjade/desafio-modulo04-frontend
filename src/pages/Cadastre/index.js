@@ -6,14 +6,13 @@ import {
     CircularProgress,
 } from "@material-ui/core";
 import { Alert } from '@material-ui/lab';
-
-import './styles.css';
-import '../../styles/form.css';
 import Logo from '../../assets/logo-dark.svg';
 import InputPassword from '../../components/InputPassword';
 import AccessLink from '../../components/AccessLink';
 import SubmitButton from '../../components/SubmitButton';
 
+import './styles.css';
+import '../../styles/form.css';
 import useStyles from "../../styles/useStyles";
 
 function Cadastre() {
