@@ -5,11 +5,11 @@ import MenuSideBar from '../../components/MenuSideBar';
 import Logo from '../../assets/logo-white.svg';
 import ButtonProfile from '../../components/ButtonProfile';
 
-import './styles.css';
 import IconMoney from '../../assets/IconMoney';
 import IconHome from '../../assets/IconHome';
 import IconUser from '../../assets/IconUser';
 
+import './styles.css';
 
 function Home() {
   const location = useLocation();

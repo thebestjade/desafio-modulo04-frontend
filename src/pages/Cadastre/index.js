@@ -5,7 +5,7 @@ import {
     Backdrop,
     CircularProgress,
 } from "@material-ui/core";
-import { Alert } from "@material-ui/lab";
+import { Alert } from '@material-ui/lab';
 
 import './styles.css';
 import '../../styles/form.css';
@@ -98,17 +98,17 @@ function Cadastre() {
                     <div className='flex-column'>
                         <label htmlFor='nome'>Nome</label>
                         <input
-                            {...register('nome', { required: true })}
                             onBlur={(e) => setName(e.target.value)}
                             id='name'
                             type="text"
+                            {...register('nome', { required: true })}
                         />
                         <label htmlFor='email'>E-mail</label>
                         <input
-                            {...register('email', { required: true })}
                             onBlur={(e) => setEmail(e.target.value)}
                             id='email' type="text"
                             placeholder='exemplo@gmail.com'
+                            {...register('email', { required: true })}
                         />
                     </div>
                     <InputPassword

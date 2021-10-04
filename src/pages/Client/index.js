@@ -4,19 +4,12 @@ import React, { useState, useEffect } from "react";
 import { useLocation } from 'react-router';
 import { useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
-
 import {
     Backdrop,
     CircularProgress
 } from "@material-ui/core";
-
 import { Alert } from "@material-ui/lab";
 import SubmitButton from '../../components/SubmitButton';
-
-import useStyles from "../../styles/useStyles";
-
-import './styles.css';
-import '../../styles/form.css';
 import Logo from '../../assets/logo-white.svg';
 import MenuSideBar from '../../components/MenuSideBar';
 import ButtonProfile from '../../components/ButtonProfile';
@@ -24,8 +17,12 @@ import IconHome from "../../assets/IconHome";
 import IconMoney from "../../assets/IconMoney";
 import IconUser from "../../assets/IconUser";
 import { toast } from 'react-toastify';
-
+import useStyles from "../../styles/useStyles";
 import { getCityByCep } from '../../services/viaCep'
+
+import './styles.css';
+import '../../styles/form.css';
+
 
 function Client() {
     const location = useLocation();
@@ -100,7 +97,7 @@ function Client() {
             setReqSuccess("");
 
 
-            const response = await fetch("https://desafio04-backend.herokuapp.com/editarUsuario", {
+            const response = await fetch("https://desafio04-backend.herokuapp.com/cadastrarCliente", {
                 method: "POST",
                 mode: "cors",
                 cache: "no-cache",
