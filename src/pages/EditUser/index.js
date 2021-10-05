@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-no-comment-textnodes */
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import {
@@ -33,28 +33,23 @@ function EditUser() {
     const [reqSuccess, setReqSuccess] = useState("");
 
 
-    useEffect(() => {
-        async function GetUser() {
+    async function GetUser() {
 
-            setReqError('')
+        setReqError('')
 
-            const response = await fetch("https://desafio04-backend.herokuapp.com/perfil", {
-                headers: {
-                    "Content-type": "application/json",
-                    mode: 'cors',
-                    Authorization: token,
-                },
-            });
-            const data = await response.json();
-            if (response.ok) {
-                return setUser(data);
-            }
-            setReqError(data);
+        const response = await fetch("https://desafio04-backend.herokuapp.com/perfil", {
+            headers: {
+                "Content-type": "application/json",
+                mode: 'cors',
+                Authorization: token,
+            },
+        });
+        const data = await response.json();
+        if (response.ok) {
+            return setUser(data);
         }
-        GetUser();
-    }, [token, setUser]);
-
-
+        setReqError(data);
+    }
 
     async function updateUser(updateData) {
 
@@ -82,6 +77,7 @@ function EditUser() {
 
             if (response.ok) {
                 setReqSuccess(data);
+                GetUser();
                 const timer = setTimeout(() => {
                     history.push('/');
                     clearTimeout(timer);
