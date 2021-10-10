@@ -15,10 +15,7 @@ import Cadastre from './pages/Cadastre';
 import Login from './pages/Login';
 import AddClient from './pages/AddClient';
 import EditUser from './pages/EditUser';
-import EditClient from './pages/EditClient';
 import Charges from './pages/Charges';
-import Client from './pages/Client';
-
 
 function ProtectedRoutes(props) {
     const { token } = useContext(TokenContext);
@@ -49,10 +46,8 @@ function Routes() {
                         <ClientsProvider>
                             <ProtectedRoutes>
                                 <Route path='/adicionarCliente' exact component={AddClient} />
-                                <Route path='/clientes' exact component={Client} />
                                 <Route path='/' exact component={Home} />
                                 <Route path="/editarUsuario" exact component={EditUser} />
-                                <Route path="/editarCliente" exact component={EditClient} />
                                 <Route path="/contratacoes" exact component={Charges} />
                             </ProtectedRoutes>
                         </ClientsProvider>

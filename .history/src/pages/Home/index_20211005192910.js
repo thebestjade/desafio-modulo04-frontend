@@ -39,7 +39,7 @@ function Home() {
         <MenuSideBar
           color={location.pathname === '/adicionarCliente' && '#374952'}
           label='CLIENTES'
-          url='/clientes'
+          url='/adicionarCliente'
           icon={<IconUser />}
         />
 

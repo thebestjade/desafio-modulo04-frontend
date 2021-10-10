@@ -267,7 +267,7 @@ function Client() {
                         </Backdrop>
 
                         <div className='flex-row form-gap ml-auto'>
-                            <button className='btn-cancel mt-lg' >Cancelar</button>
+                            <button className='btn-cancel mt-lg' onClick={()=> history.push('/')}>Cancelar</button>
                             <SubmitButton
                                 label='Adicionar cliente'
                                 color={isValid && '#DA0175'}

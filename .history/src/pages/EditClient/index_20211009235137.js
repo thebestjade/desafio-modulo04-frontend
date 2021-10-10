@@ -79,7 +79,7 @@ function Client() {
 
 
 
-    async function addClient(addData) {
+    async function editClient(addData) {
 
         try {
             setLoading(true);
@@ -153,7 +153,7 @@ function Client() {
             <div className='container-form-client flex-column'>
                 <ButtonProfile />
                 <span className='title-form-h5'>ADICIONAR CLIENTE</span>
-                <form className='form width-lg label-form' onSubmit={handleSubmit(addClient)} onKeyDown={e => e.code === 'Enter' && e.preventDefault()}>
+                <form className='form width-lg label-form' onSubmit={handleSubmit(editClient)} onKeyDown={e => e.code === 'Enter' && e.preventDefault()}>
                     <div className='flex-column  content-center items-center'>
                         <div className='flex-column'>
                             <label htmlFor='name'>Nome</label>

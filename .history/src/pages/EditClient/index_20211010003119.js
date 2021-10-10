@@ -1,5 +1,5 @@
+/* eslint-disable react/jsx-no-comment-textnodes */
 import React, { useState, useEffect, useContext } from "react";
-import { useLocation } from 'react-router';
 import { useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import {
@@ -7,41 +7,39 @@ import {
     CircularProgress
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
-import SubmitButton from '../../components/SubmitButton';
-import Logo from '../../assets/logo-white.svg';
-import MenuSideBar from '../../components/MenuSideBar';
-import ButtonProfile from '../../components/ButtonProfile';
-import IconHome from "../../assets/IconHome";
-import IconMoney from "../../assets/IconMoney";
-import IconUser from "../../assets/IconUser";
-import { toast } from 'react-toastify';
-import useStyles from "../../styles/useStyles";
-import getCityByCep from '../../services/viaCep';
+import Home from "../Home";
 import TokenContext from "../../contexts/token/TokenContext";
+import UserContext from "../../contexts/user/UserContext";
+import SubmitButton from '../../components/SubmitButton';
+import getCityByCep from '../../services/viaCep';
+import { toast } from 'react-toastify';
+
+
 
 import './styles.css';
-import '../../styles/form.css';
+import '../Home/styles.css';
+import useStyles from "../../styles/useStyles";
 
+function EditClient() {
 
-function Client() {
-    const { token } = useContext(TokenContext);
-    const location = useLocation();
     const classes = useStyles();
     const history = useHistory();
     const {
         handleSubmit,
-        register, formState: { isValid }
+        register,
+        formState: { isValid },
     } = useForm({ mode: 'onChange' });
+    const { token } = useContext(TokenContext);
+    const { user, setUser } = useContext(UserContext);
     const [loading, setLoading] = useState(false);
     const [reqError, setReqError] = useState("");
     const [reqSuccess, setReqSuccess] = useState("");
-
+    
     const [cep, setCep] = useState("");
     const [city, setCity] = useState("");
     const [district, setDistrict] = useState("");
     const [street, setStreet] = useState("");
     const [state, setState] = useState("");
-
 
     async function loadCityByCep(myCep) {
 
@@ -77,9 +75,26 @@ function Client() {
         }
     }, [cep])
 
+    async function GetUser() {
 
 
-    async function addClient(addData) {
+        setReqError('')
+
+        const response = await fetch("https://desafio04-backend.herokuapp.com/perfil", {
+            headers: {
+                "Content-type": "application/json",
+                mode: 'cors',
+                Authorization: token,
+            },
+        });
+        const data = await response.json();
+        if (response.ok) {
+            return setUser(data);
+        }
+        setReqError(data);
+    }
+
+    async function updateClient(updateData) {
 
         try {
             setLoading(true);
@@ -87,23 +102,25 @@ function Client() {
             setReqSuccess("");
 
 
-            const response = await fetch("https://desafio04-backend.herokuapp.com/cadastrarCliente", {
-                method: "POST",
+            const response = await fetch("https://desafio04-backend.herokuapp.com/editarCliente", {
+                method: "PUT",
+                mode: "cors",
                 cache: "no-cache",
                 credentials: "same-origin",
-                body: JSON.stringify(addData),
+                body: JSON.stringify(updateData),
                 headers: {
                     "Content-type": "application/json",
-                    mode: "cors",
-                    Authorization: token,
+                    Authorization: token
                 },
             });
 
             const data = await response.json();
+
             setLoading(false);
 
             if (response.ok) {
                 setReqSuccess(data);
+                GetUser();
                 const timer = setTimeout(() => {
                     history.push('/');
                     clearTimeout(timer);
@@ -123,37 +140,12 @@ function Client() {
     };
 
     return (
-        <div className="container-client flex-row">
-            <div className='side-bar-client text-center' >
-                <img className='logo-form pt-md' src={Logo} alt="Logo da Cubos Academy" />
-
-                <MenuSideBar
-                    label='HOME'
-                    url={'/'}
-                    icon={<IconHome />}
-                    color={location.pathname === '/' && '#374952'}
-                />
-
-                <MenuSideBar
-                    color={location.pathname === '/contratacoes' && '#374952'}
-                    label='CONTRATAÇÕES'
-                    url='/contratacoes'
-                    icon={<IconMoney />}
-                />
-
-                <MenuSideBar
-                    color={location.pathname === '/adicionarCliente' && '#374952'}
-                    label='CLIENTES'
-                    url='/adicionarCliente'
-                    icon={<IconUser />}
-                />
-
-                <button className='btn-enable-charges items-center'>Criar cobrança</button>
-            </div>
-            <div className='container-form-client flex-column'>
-                <ButtonProfile />
-                <span className='title-form-h5'>ADICIONAR CLIENTE</span>
-                <form className='form width-lg label-form' onSubmit={handleSubmit(addClient)} onKeyDown={e => e.code === 'Enter' && e.preventDefault()}>
+        <div >
+            <Home />
+            {Object.keys(user).length &&
+                <>
+                    <div className='container-form flex-column modal-form '>
+                    <form className='form width-lg label-form' onSubmit={handleSubmit(updateClient)} onKeyDown={e => e.code === 'Enter' && e.preventDefault()}>
                     <div className='flex-column  content-center items-center'>
                         <div className='flex-column'>
                             <label htmlFor='name'>Nome</label>
@@ -275,11 +267,14 @@ function Client() {
                         </div>
                     </div>
                 </form>
-
-
-            </div>
+                    </div>
+                    <Backdrop className={classes.backdrop} open={loading}>
+                        <CircularProgress color="inherit" />
+                    </Backdrop>
+                </>
+            }
         </div>
     )
 }
 
-export default Client;
+export default EditClient;

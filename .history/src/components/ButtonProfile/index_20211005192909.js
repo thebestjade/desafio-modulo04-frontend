@@ -21,6 +21,7 @@ function ButtonProfile() {
                 className='cursor-pointer button-decoration img-profile'
                 onClick={isInputVisible ? () => setIsInputVisible(false) : () => setIsInputVisible(true)}
             >
+            </button>
             {isInputVisible &&
                 <div className='input-profile-logout'>
                     <button
@@ -38,7 +39,6 @@ function ButtonProfile() {
                     </button>
                 </div>
             }
-            </button>
         </div>
     );
 }

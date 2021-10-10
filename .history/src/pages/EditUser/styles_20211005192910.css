@@ -10,7 +10,7 @@
     -webkit-transition: opacity 400ms ease-in;
     -moz-transition: opacity 400ms ease-in;
     transition: opacity 400ms ease-in;
-    padding: 100px;
+    padding: 200px;
     min-width: 460px;
     overflow: auto;
 }
