@@ -1,0 +1,14 @@
+.label-description {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 15px;
+    letter-spacing: 0.25px;
+    color: #868686;
+    margin: -25px 0px 28px 8px;
+}
+
+.input-description {
+    height: 56px !important;
+}
