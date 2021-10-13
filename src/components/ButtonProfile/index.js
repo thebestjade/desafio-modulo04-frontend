@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useHistory } from "react-router-dom";
 import { useContext } from 'react';
 
 
@@ -10,7 +9,6 @@ import ModalContext from "../../contexts/modal/ModalContext";
 
 
 function ButtonProfile( url ) {
-    const history = useHistory();
     const { isOpen, setIsOpen } = useContext(ModalContext);
 
     const [isInputVisible, setIsInputVisible] = useState(false);
