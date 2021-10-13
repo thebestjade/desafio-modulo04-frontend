@@ -18,9 +18,13 @@ import '../Home/styles.css';
 import useStyles from "../../styles/useStyles";
 import getCityByCep from "../../services/viaCep";
 import { toast } from "react-toastify";
+import EditUser from "../EditUser";
+import ModalContext from "../../contexts/modal/ModalContext";
+
 
 function EditClient() {
 
+    const { isOpen } = useContext(ModalContext);
     const classes = useStyles();
     const history = useHistory();
     const {
@@ -35,11 +39,9 @@ function EditClient() {
     const [loading, setLoading] = useState(false);
     const [reqError, setReqError] = useState("");
     const [reqSuccess, setReqSuccess] = useState("");
-    const [cep, setCep] = useState("");
 
 
     async function loadCityByCep(myCep) {
-
         const { localidade, logradouro, bairro, uf } = await getCityByCep(myCep);
         if (!localidade) {
             toast.error("Falha ao encontrar cidade", {
@@ -52,23 +54,23 @@ function EditClient() {
             });
             return;
         }
-        setClients({...clients, city: localidade, public_place: logradouro, district: bairro, uf: uf});
-        
+        setClients({ ...clients, city: localidade, public_place: logradouro, district: bairro, uf: uf });
     }
 
     useEffect(() => {
-
-        if (cep.indexOf('-') !== -1) {
-            const cepToSearch = cep.replace(/\D/g, '');
-            if (cepToSearch.length === 8) {
-                loadCityByCep(cepToSearch);
-            }
-        } else {
-            if (cep.length === 8) {
-                loadCityByCep(cep);
+        if (Object.keys(clients).length > 0 && !!clients.cep) {
+            if (clients.cep.indexOf('-') !== -1) {
+                const cepToSearch = clients.cep.replace(/\D/g, '');
+                if (cepToSearch.length === 8) {
+                    loadCityByCep(cepToSearch);
+                }
+            } else {
+                if (clients.length === 8) {
+                    loadCityByCep(clients.cep);
+                }
             }
         }
-    }, [cep])
+    }, [clients.cep])
 
     async function getClient() {
         setReqError('')
@@ -211,7 +213,7 @@ function EditClient() {
                                             className='input-form'
                                             mask="99999-999"
                                             defaultValue={clients.cep}
-                                            {...register("cep", {onChange: (e) => {setCep(e.target.value)}})}
+                                            {...register("cep", { onChange: e => setClients({ ...clients, cep: e.target.value }) })}
                                         >
                                             {(inputProps) => (<input
                                                 {...inputProps}
@@ -267,10 +269,10 @@ function EditClient() {
                                     <div className='flex-column'>
                                         <label htmlFor='uf'>Estado</label>
                                         <input
-                                            className='input-form  width-mid' 
+                                            className='input-form  width-mid'
                                             id='uf' type="text"
                                             defaultValue={clients.uf}
-                                            {...register('uf', {required: true } )}
+                                            {...register('uf')}
                                         />
                                     </div>
                                 </div>

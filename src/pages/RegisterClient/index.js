@@ -159,14 +159,14 @@ function Client() {
                                     {(inputProps) => (<input
                                         {...inputProps}
                                         name='cpf'
+                                        id='cpf'
                                         type="text"
-
                                     />)
                                     }
                                 </InputMask>
                             </div>
                             <div className='flex-column'>
-                                <label htmlFor='phone'>Telefone</label>
+                                <label htmlFor='telefone'>Telefone</label>
                                 <InputMask
                                     className='input-form'
                                     mask="(99)99999-9999"
@@ -175,8 +175,8 @@ function Client() {
                                     {(inputProps) => (<input
                                         {...inputProps}
                                         name='telefone'
+                                        id='telefone'
                                         type="text"
-
                                     />)
                                     }
                                 </InputMask>
@@ -188,14 +188,14 @@ function Client() {
                                 <InputMask
                                     className='input-form'
                                     mask="99999-999"
-                                    {...register("cep", {onChange: (e) => {setCep(e.target.value)}})}
+                                    {...register("cep", { onChange: (e) => { setCep(e.target.value) } })}
 
                                 >
                                     {(inputProps) => (<input
                                         {...inputProps}
                                         name='cep'
+                                        id='cep'
                                         type="text"
-
                                     />)
                                     }
                                 </InputMask>
@@ -235,9 +235,9 @@ function Client() {
                         </div>
                         <div className='flex-row form-gap form-inline' >
                             <div className='flex-column'>
-                                <label htmlFor='complete'>Complemento</label>
+                                <label htmlFor='complement'>Complemento</label>
                                 <input
-                                    className='input-form width-mid' id='complete' type="text"
+                                    className='input-form width-mid' id='complement' type="text"
                                     {...register('complemento')}
                                 />
                             </div>

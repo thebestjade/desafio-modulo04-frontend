@@ -121,9 +121,9 @@ function DetailClient({ id, name, email, phone, totalCharges, totalChargesPaid, 
                                     </div>
                                 </li>
                                 <li>
-                                    <h4 className='label-content-detail'>PONTO DE REFERÊNCIA</h4>
+                                    <h4 className='label-content-detail'>ESTADO</h4>
                                     <div className='detail-width-lg flex-row'>
-                                        {clients.reference}
+                                        {clients.uf}
                                     </div>
                                 </li>
                             </ul>
@@ -131,14 +131,14 @@ function DetailClient({ id, name, email, phone, totalCharges, totalChargesPaid, 
                     </div>
                     <div className='charges-content'>
                         <li className='pd-right-sm detail-width-lg'>
-                            {charges.map(({ id, descripition, due_date, value, status }) => (
+                            {charges.map(({ id, description, due_date, value, status }) => (
                                 <div className='container-charges-detail flex-row'>
                                     <div className='flex-column widht-container'>
-                                        <span className='flex-row'>
-                                            <h4>
+                                        <span className='flex-row items-center'>
+                                            <h4 className='pd-right-sm'>
                                                 #{id}
                                             </h4>
-                                            {descripition}
+                                            {description}
                                         </span>
                                         <span className='detail-date '>
                                             {Intl.DateTimeFormat('pt-br', { year: 'numeric', month: 'numeric', day: 'numeric' }).format(new Date(due_date))}
@@ -146,7 +146,7 @@ function DetailClient({ id, name, email, phone, totalCharges, totalChargesPaid, 
                                     </div>
                                     <div className='flex-column align-items-end'>
                                         <h5 className='detail-value'>
-                                            {Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value / 100)}
+                                            {Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value)}
                                         </h5>
                                         <span className='status'
                                             style={status.toUpperCase() === 'PAGO' ? { color: '#4EC06E' } : status.toUpperCase() === 'PENDENTE' ? { color: '#5197B5' } : { color: '#FF4D4D' }}

@@ -29,10 +29,10 @@ function ContainerStatus({ id, name, email, phone, totalcharges, totalchargespai
                     </span>
                 </div>
                 <span className='totalCharges flex-basis-mid'>
-                    {Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(totalcharges / 100)}
+                    {Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(totalcharges)}
                 </span>
                 <span className='totalChargesPaid flex-basis-mid'>
-                    {Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(totalchargespaid / 100)}
+                    {Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(totalchargespaid)}
 
                 </span>
                 <span className='status flex-basis-mid' style={status.toUpperCase() === 'EM_DIA' ? { color: '#4EC06E' } : { color: '#FF4D4D' }}>
