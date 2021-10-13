@@ -18,13 +18,10 @@ import '../Home/styles.css';
 import useStyles from "../../styles/useStyles";
 import getCityByCep from "../../services/viaCep";
 import { toast } from "react-toastify";
-import EditUser from "../EditUser";
-import ModalContext from "../../contexts/modal/ModalContext";
 
 
 function EditClient() {
 
-    const { isOpen } = useContext(ModalContext);
     const classes = useStyles();
     const history = useHistory();
     const {

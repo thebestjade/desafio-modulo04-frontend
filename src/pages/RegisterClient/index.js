@@ -127,7 +127,7 @@ function Client() {
             <SideBar />
             <div className='container-form-client flex-column'>
                 <ButtonProfile />
-                <span className='title-form-h5'>// ADICIONAR CLIENTE</span>
+                <span className='title-form-h5'>{`// ADICIONAR CLIENTE`}</span>
                 <form className='form width-lg label-form' onSubmit={handleSubmit(addClient)} onKeyDown={e => (e.code === 'Enter' || e.code === 'NumpadEnter') && e.preventDefault()}>
                     <div className='flex-column  content-center items-center'>
                         <div className='flex-column'>
