@@ -1,0 +1,47 @@
+.container-detail-modal {
+    display: grid;
+    background-color: white;
+    box-shadow: 0px 0px 32px rgb(0 0 0 / 10%);
+    border-radius: 16px;
+    padding: 45px 50px;
+    width: 800px !important;
+    height: 533px;
+    grid-template-areas: "client-content-header client-content-header client-content-header  charges-content charges-content"
+                         "client-content-body client-content-body client-content-body charges-content charges-content"   
+                         "client-content client-content client-content charges-content charges-content";
+    grid-template-rows: 90px;
+    grid-template-columns: 50%;
+}
+
+.client-content-header  {
+    grid-area: client-content-header;
+}
+.client-content-body  {
+    grid-area: client-content-body;
+    padding-left: 0px;
+    gap: 10px;
+}
+
+.client-content  {
+    grid-area: client-content;
+}
+
+.charges-content {
+    grid-area: charges-content ;
+}
+
+.detail-name {
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 36px;
+    line-height: 15px;   
+    display: flex;
+    align-items: flex-end;
+    color: #374952;
+    
+}
+
+.detail-width-lg {
+    width: 800px;
+}

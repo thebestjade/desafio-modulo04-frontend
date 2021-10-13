@@ -1,0 +1,43 @@
+.container-status  {
+    height: 131px;
+    background: #FFFFFF;
+    border-radius: 8px;
+    align-items: center;
+    margin: 0px 72px;
+    color: #4C4C4C;
+    border-radius: 8px;
+    list-style: none;
+    align-items: center;
+    font-size: 14px;
+    margin-bottom: 16px;
+}
+
+.status {
+    color: #4EC06E;
+    text-transform: uppercase;
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 15px;
+}
+
+.first-column {
+    text-align: left;
+    color: #4C4C4C;
+}
+
+.first-column h5 {
+    margin: 5px 0px;
+}
+
+.button-edit-client{
+    cursor: pointer;
+    border: none;
+    background-color: transparent;
+}
+
+.header-table ul li {
+    flex-basis: auto;
+    text-align: initial;
+}
