@@ -18,16 +18,12 @@
 
 }
 
-.form-gap {
-    gap: 28px;
-}
-
 .width-lg {
-    width: 512px !important;
+    width: 529px !important;
 }
 
 .width-mid {
-    width: 240px !important;
+    width: 256px !important;
 }
 
 .label-form {

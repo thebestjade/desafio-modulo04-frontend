@@ -9,7 +9,7 @@ import { Alert } from '@material-ui/lab';
 import Logo from '../../assets/logo-dark.svg';
 import InputPassword from '../../components/InputPassword';
 import AccessLink from '../../components/AccessLink';
-import SubmitButton from '../../components/SubmitButton';
+import ButtonSubmit from '../../components/ButtonSubmit';
 
 import './styles.css';
 import '../../styles/form.css';
@@ -112,7 +112,7 @@ function Cadastre() {
                         <CircularProgress color="inherit" />
                     </Backdrop>
 
-                    <SubmitButton
+                    <ButtonSubmit
                         color={isValid && '#DA0175'}
                         label='Criar conta'
                     />

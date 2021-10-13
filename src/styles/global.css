@@ -38,13 +38,13 @@ button {
     border-radius: 10px;
 }
 
-input[type='text'], input[type='password']{
+input[type='text'], input[type='password'], select, input[type='date']{
     font-family: 'Montserrat', sans-serif;
     height: 45px;
     width: 261px;
     border: 1px solid #4C4C4C;
     font-size: 14px;
-    color: #A5A5A5;
+    color: #4C4C4C;
     padding: 5px 10px;
     border-top: none;
     border-left: none;
@@ -64,4 +64,27 @@ input[type='checkbox'] {
     vertical-align: middle;
     margin-right: 10px;
     cursor: pointer;
+}
+
+::-webkit-input-placeholder {
+    color: #A5A5A5;
+}
+
+.overflow-scroll {
+    overflow-y: scroll;
+}
+
+.flex-basis-sm {
+    flex-basis: 10%;
+    text-align: start;
+}
+
+.flex-basis-mid {
+    flex-basis: 15%;
+    text-align: start;
+}
+
+.flex-basis-lg {
+    flex-basis: 20%;
+    text-align: start;
 }

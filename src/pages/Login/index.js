@@ -12,7 +12,7 @@ import UserContext from "../../contexts/user/UserContext";
 import Logo from '../../assets/logo-dark.svg';
 import InputPassword from '../../components/InputPassword';
 import AccessLink from '../../components/AccessLink';
-import SubmitButton from '../../components/SubmitButton';
+import ButtonSubmit from '../../components/ButtonSubmit';
 
 import './styles.css';
 import '../../styles/form.css';
@@ -51,7 +51,6 @@ function Login() {
             const data = await response.json();
             setLoading(false);
 
-            console.log(data);
             if (response.ok) {
                 useToken.logar(data?.token, () => history.push("/"));
                 setUser(data.userData);
@@ -96,7 +95,7 @@ function Login() {
                         </Alert>
                     )}
 
-                    <SubmitButton
+                    <ButtonSubmit
                         label='Entrar'
                         color={isValid && '#DA0175'}
                     />

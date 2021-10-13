@@ -9,13 +9,19 @@ import {
 import TokenContext from "./contexts/token/TokenContext";
 import TokenProvider from "./contexts/token/TokenProvider";
 import UserProvider from "./contexts/user/UserProvider";
-import ClientsProvider from "./contexts/clients/ClientsProvider";
-import Home from './pages/Home';
-import Cadastre from './pages/Cadastre';
-import Login from './pages/Login';
-import AddClient from './pages/AddClient';
-import EditUser from './pages/EditUser';
+import ClientsProvider from "./contexts/client/ClientsProvider";
+import ChargesProvider from "./contexts/charge/ChargesProvider";
+import ModalProvider from "./contexts/modal/ModalProvider";
 import Charges from './pages/Charges';
+import Clients from './pages/Clients';
+import Login from './pages/Login';
+import Home from './pages/Home';
+import EditClient from './pages/EditClient';
+import DetailClient from './pages/DetailClient';
+import RegisterUser from './pages/RegisterUser';
+import RegisterClient from './pages/RegisterClient';
+import RegisterCharge from './pages/RegisterCharge';
+
 
 function ProtectedRoutes(props) {
     const { token } = useContext(TokenContext);
@@ -28,7 +34,7 @@ function ProtectedRoutes(props) {
 function RedirectToHome(props) {
     const { token } = useContext(TokenContext);
     const location = useLocation();
-    if(location.pathname !== '/login') {
+    if (location.pathname !== '/login') {
         return props.children;
     }
     return (
@@ -41,16 +47,24 @@ function Routes() {
         <TokenProvider>
             <Router>
                 <Switch>
-                    <Route path='/cadastro' exact component={Cadastre} />
+                    <Route path='/cadastro' exact component={RegisterUser} />
                     <UserProvider>
-                        <ClientsProvider>
-                            <ProtectedRoutes>
-                                <Route path='/adicionarCliente' exact component={AddClient} />
-                                <Route path='/' exact component={Home} />
-                                <Route path="/editarUsuario" exact component={EditUser} />
-                                <Route path="/contratacoes" exact component={Charges} />
-                            </ProtectedRoutes>
-                        </ClientsProvider>
+                        <ChargesProvider>
+                            <ClientsProvider>
+                                <ModalProvider>
+                                    <ProtectedRoutes>
+                                        <Route path='/' exact component={Home} />
+                                        <Route path="/cadastrarCobranca" exact component={RegisterCharge} />
+                                        <Route path='/cadastrarCliente' exact component={RegisterClient} />
+                                        <Route path='/clientes' exact component={Clients} />
+                                        <Route path="/cobrancas" exact component={Charges} />
+                                        {/* <Route path="/editarUsuario" exact component={EditUser} /> */}
+                                        <Route path="/editarCliente/:clienteId" exact component={EditClient} />
+                                        <Route path="/clientes/:clienteId" exact component={DetailClient} />
+                                    </ProtectedRoutes>
+                                </ModalProvider>
+                            </ClientsProvider>
+                        </ChargesProvider>
                         <RedirectToHome>
                             <Route path='/login' exact component={Login} />
                         </RedirectToHome>

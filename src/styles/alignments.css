@@ -24,6 +24,18 @@
     align-self: end;
 }
 
+.align-items-end {
+    align-items: end;
+}
+
+.align-self-start {
+    align-self: start;
+}
+
+.align-start {
+    align-items: start;
+}
+
 .content-around {
     justify-content: space-between;
     padding: 0px 16px;

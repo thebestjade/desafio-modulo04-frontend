@@ -64,3 +64,7 @@
 .gap-sm {
     gap: 16px;
 }
+
+.mg-error {
+    margin: 0px 72px 24px 72px;
+}

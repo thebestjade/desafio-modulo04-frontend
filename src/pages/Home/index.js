@@ -1,51 +1,31 @@
 /* eslint-disable no-restricted-globals */
-import { useLocation } from 'react-router';
-import ContainerHome from '../../components/ContainerHome';
-import MenuSideBar from '../../components/MenuSideBar';
-import Logo from '../../assets/logo-white.svg';
+import { useContext } from 'react';
 import ButtonProfile from '../../components/ButtonProfile';
 import IconMoney from '../../assets/IconMoney';
-import IconHome from '../../assets/IconHome';
 import IconUser from '../../assets/IconUser';
+import SideBar from '../../components/SideBar';
+import ModalContext from '../../contexts/modal/ModalContext'
 
 import './styles.css';
+import EditUser from '../EditUser';
+
+function ContainerHome({ label, cor }) {
+  return(
+      <div style={{borderColor: cor, color: cor}} className='flex-row container-value content-around'>
+          <h4>{label}</h4>
+          <h4 className='number-zero '>0</h4>
+      </div>
+  );
+}
 
 function Home() {
-  const location = useLocation();
+  const { isOpen } = useContext(ModalContext);
 
   return (
     <div className="container-home flex-row">
-      <div className='side-bar text-center' >
-        <img
-          className='logo-form pt-md'
-          src={Logo}
-          alt="Logo da Cubos Academy"
-        />
-
-        <MenuSideBar
-          label='HOME'
-          url={'/'}
-          icon={<IconHome />}
-          color={location.pathname === '/' && '#374952'}
-        />
-
-        <MenuSideBar
-          color={location.pathname === '/contratacoes' && '#374952'}
-          label='CONTRATAÇÕES'
-          url='/contratacoes'
-          icon={<IconMoney />}
-        />
-
-        <MenuSideBar
-          color={location.pathname === '/adicionarCliente' && '#374952'}
-          label='CLIENTES'
-          url='/adicionarCliente'
-          icon={<IconUser />}
-        />
-
-        <button className='btn-enable-charges items-center'>Criar cobrança</button>
-      </div>
-      <div className='body container-home'>
+      {isOpen && <EditUser/>}
+      <SideBar />
+      <div className='body container-home overflow-scroll'>
         <ButtonProfile />
         <div className='containers content-center grid-gap-mid container-margin-lg'>
           <div className='flex-column'>

@@ -1,12 +1,17 @@
 import { useState } from 'react';
 import { useHistory } from "react-router-dom";
+import { useContext } from 'react';
+
 
 import './styles.css'
 import IconLogout from "../../assets/IconLogout";
 import IconEdit from "../../assets/IconEdit";
+import ModalContext from "../../contexts/modal/ModalContext";
 
-function ButtonProfile() {
+
+function ButtonProfile( url ) {
     const history = useHistory();
+    const { isOpen, setIsOpen } = useContext(ModalContext);
 
     const [isInputVisible, setIsInputVisible] = useState(false);
 
@@ -21,12 +26,11 @@ function ButtonProfile() {
                 className='cursor-pointer button-decoration img-profile'
                 onClick={isInputVisible ? () => setIsInputVisible(false) : () => setIsInputVisible(true)}
             >
-            </button>
             {isInputVisible &&
                 <div className='input-profile-logout'>
                     <button
                         className='flex-row items-center pd-mid button-decoration-none'
-                        onClick={() => history.push('/editarUsuario')}
+                        onClick={() => setIsOpen(!isOpen)}
                     >
                         {<IconEdit />}
                         Editar
@@ -39,6 +43,7 @@ function ButtonProfile() {
                     </button>
                 </div>
             }
+            </button>
         </div>
     );
 }

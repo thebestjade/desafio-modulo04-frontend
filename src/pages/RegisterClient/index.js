@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useLocation } from 'react-router';
 import { useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import {
@@ -7,25 +6,23 @@ import {
     CircularProgress
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
-import SubmitButton from '../../components/SubmitButton';
-import Logo from '../../assets/logo-white.svg';
-import MenuSideBar from '../../components/MenuSideBar';
+import ButtonSubmit from '../../components/ButtonSubmit';
 import ButtonProfile from '../../components/ButtonProfile';
-import IconHome from "../../assets/IconHome";
-import IconMoney from "../../assets/IconMoney";
-import IconUser from "../../assets/IconUser";
 import { toast } from 'react-toastify';
+import InputMask from "react-input-mask";
 import useStyles from "../../styles/useStyles";
 import getCityByCep from '../../services/viaCep';
 import TokenContext from "../../contexts/token/TokenContext";
+import SideBar from "../../components/SideBar";
 
 import './styles.css';
 import '../../styles/form.css';
+import EditUser from "../EditUser";
+import ModalContext from "../../contexts/modal/ModalContext";
 
 
 function Client() {
     const { token } = useContext(TokenContext);
-    const location = useLocation();
     const classes = useStyles();
     const history = useHistory();
     const {
@@ -66,7 +63,7 @@ function Client() {
     useEffect(() => {
 
         if (cep.indexOf('-') !== -1) {
-            const cepToSearch = cep.trim().replace('-', '');
+            const cepToSearch = cep.replace(/\D/g, '');
             if (cepToSearch.length === 8) {
                 loadCityByCep(cepToSearch);
             }
@@ -122,38 +119,16 @@ function Client() {
         setReqSuccess("");
     };
 
+    const { isOpen } = useContext(ModalContext);
+
     return (
         <div className="container-client flex-row">
-            <div className='side-bar-client text-center' >
-                <img className='logo-form pt-md' src={Logo} alt="Logo da Cubos Academy" />
-
-                <MenuSideBar
-                    label='HOME'
-                    url={'/'}
-                    icon={<IconHome />}
-                    color={location.pathname === '/' && '#374952'}
-                />
-
-                <MenuSideBar
-                    color={location.pathname === '/contratacoes' && '#374952'}
-                    label='CONTRATAÇÕES'
-                    url='/contratacoes'
-                    icon={<IconMoney />}
-                />
-
-                <MenuSideBar
-                    color={location.pathname === '/adicionarCliente' && '#374952'}
-                    label='CLIENTES'
-                    url='/adicionarCliente'
-                    icon={<IconUser />}
-                />
-
-                <button className='btn-enable-charges items-center'>Criar cobrança</button>
-            </div>
+            {isOpen && <EditUser />}
+            <SideBar />
             <div className='container-form-client flex-column'>
                 <ButtonProfile />
-                <span className='title-form-h5'>ADICIONAR CLIENTE</span>
-                <form className='form width-lg label-form' onSubmit={handleSubmit(addClient)}>
+                <span className='title-form-h5'>// ADICIONAR CLIENTE</span>
+                <form className='form width-lg label-form' onSubmit={handleSubmit(addClient)} onKeyDown={e => (e.code === 'Enter' || e.code === 'NumpadEnter') && e.preventDefault()}>
                     <div className='flex-column  content-center items-center'>
                         <div className='flex-column'>
                             <label htmlFor='name'>Nome</label>
@@ -173,35 +148,57 @@ function Client() {
                                 {...register('email', { required: true })}
                             />
                         </div>
-                        <div className='flex-row form-gap' >
+                        <div className='flex-row form-gap form-inline' >
                             <div className='flex-column'>
                                 <label htmlFor='cpf'>CPF</label>
-                                <input
-                                    maxLength={11}
-                                    className='input-form width-mid' id='cpf' type="text"
-                                    {...register('cpf', { required: true })}
-                                />
+                                <InputMask
+                                    className='input-form'
+                                    mask="999.999.999-99"
+                                    {...register("cpf")}
+                                >
+                                    {(inputProps) => (<input
+                                        {...inputProps}
+                                        name='cpf'
+                                        id='cpf'
+                                        type="text"
+                                    />)
+                                    }
+                                </InputMask>
                             </div>
                             <div className='flex-column'>
-                                <label htmlFor='phone'>Telefone</label>
-                                <input
-                                    maxLength={11}
-                                    className='input-form width-mid' id='phone' type="text"
-                                    {...register('telefone', { required: true })}
-                                />
+                                <label htmlFor='telefone'>Telefone</label>
+                                <InputMask
+                                    className='input-form'
+                                    mask="(99)99999-9999"
+                                    {...register("telefone")}
+                                >
+                                    {(inputProps) => (<input
+                                        {...inputProps}
+                                        name='telefone'
+                                        id='telefone'
+                                        type="text"
+                                    />)
+                                    }
+                                </InputMask>
                             </div>
                         </div>
-                        <div className='flex-row form-gap' >
+                        <div className='flex-row form-gap form-inline' >
                             <div className='flex-column'>
                                 <label htmlFor='cep'>CEP</label>
-                                <input
-                                    className='input-form width-mid'
-                                    id='cep'
-                                    type="text"
-                                    value={cep}
-                                    maxLength={9}
-                                    onChange={(e) => setCep(e.target.value)}
-                                />
+                                <InputMask
+                                    className='input-form'
+                                    mask="99999-999"
+                                    {...register("cep", { onChange: (e) => { setCep(e.target.value) } })}
+
+                                >
+                                    {(inputProps) => (<input
+                                        {...inputProps}
+                                        name='cep'
+                                        id='cep'
+                                        type="text"
+                                    />)
+                                    }
+                                </InputMask>
                             </div>
                             <div className='flex-column'>
                                 <label htmlFor='street'>Logradouro</label>
@@ -210,11 +207,11 @@ function Client() {
                                     id='street'
                                     type="text"
                                     value={street}
-                                    onChange={(e) => setStreet(e.target.value)}
+                                    {...register("logradouro")}
                                 />
                             </div>
                         </div>
-                        <div className='flex-row form-gap' >
+                        <div className='flex-row form-gap form-inline' >
                             <div className='flex-column'>
                                 <label htmlFor='local'>Bairro</label>
                                 <input
@@ -222,7 +219,7 @@ function Client() {
                                     id='local'
                                     type="text"
                                     value={district}
-                                    onChange={(e) => setDistrict(e.target.value)}
+                                    {...register("bairro")}
                                 />
                             </div>
                             <div className='flex-column'>
@@ -232,15 +229,15 @@ function Client() {
                                     id='city'
                                     type="text"
                                     value={city}
-                                    onChange={(e) => setCity(e.target.value)}
+                                    {...register("cidade")}
                                 />
                             </div>
                         </div>
-                        <div className='flex-row form-gap' >
+                        <div className='flex-row form-gap form-inline' >
                             <div className='flex-column'>
-                                <label htmlFor='complete'>Complemento</label>
+                                <label htmlFor='complement'>Complemento</label>
                                 <input
-                                    className='input-form width-mid' id='complete' type="text"
+                                    className='input-form width-mid' id='complement' type="text"
                                     {...register('complemento')}
                                 />
                             </div>
@@ -267,8 +264,15 @@ function Client() {
                         </Backdrop>
 
                         <div className='flex-row form-gap ml-auto'>
-                            <button className='btn-cancel mt-lg' onClick={()=> history.push('/')}>Cancelar</button>
-                            <SubmitButton
+
+                            <button
+                                className='btn-cancel mt-lg'
+                                onClick={() => history.goBack()}
+                            >
+                                Cancelar
+                            </button>
+
+                            <ButtonSubmit
                                 label='Adicionar cliente'
                                 color={isValid && '#DA0175'}
                             />

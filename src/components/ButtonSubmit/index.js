@@ -1,6 +1,6 @@
 import './styles.css'
 
-function SubmitButton({ label, color }) {
+function ButtonSubmit({ label, color }) {
     return (
         <div>
             <button
@@ -13,6 +13,6 @@ function SubmitButton({ label, color }) {
     );
 }
 
-export default SubmitButton;
+export default ButtonSubmit;
 
 

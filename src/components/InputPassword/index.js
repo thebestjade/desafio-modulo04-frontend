@@ -7,7 +7,7 @@ function InputPassword({ register }) {
     const [showPassword, setShowPassword] = useState(false);
 
     return (
-        <div className='flex-column input-password'>
+        <div className='flex-column input-password align-start'>
             <label htmlFor='senha'>Senha</label>
             <input
                 id='password'
