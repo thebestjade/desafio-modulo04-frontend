@@ -1,0 +1,68 @@
+.header-table {
+    margin: 0px 72px 24px 72px;
+    background-color: #9DBBC3;
+    color: white;
+    height: 32px;
+    border-radius: 8px;
+    list-style: none;
+    align-items: center;
+}
+
+
+.list {
+    list-style: none;
+    padding: 0px 24px;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.container-charge .header-table ul li {
+    flex-basis: 20%;
+    text-align: initial;
+}
+
+.container-charge .header-table ul li:first-child {
+    flex-basis: 10%;
+    text-align: initial;
+}
+
+.container-charge .header-table ul li:nth-child(3){
+    flex-basis: 25%;
+    text-align: initial;
+}
+/* 
+.container-client .header-table ul li {
+    flex-basis: 20%;
+    text-align: initial;
+}
+
+.container-client .header-table ul li:first-child, .container-client .header-table ul li:nth-child(3) {
+    flex-basis: 25%;
+    text-align: initial;
+}
+
+.container-client .header-table ul li:last-child {
+    flex-basis: 2%;
+    text-align: initial; */
+
+
+.container-status .header-table ul span {
+    flex-basis: 23%;
+    text-align: initial;
+}
+
+.container-status .header-table ul div:first-child {
+    flex-basis: 27%;
+    text-align: initial;
+}
+
+/* 
+.container-status ul span:nth-child(3) {
+    flex-basis: 25%;
+    text-align: initial;
+} */
+
+.container-status .header-table ul span:last-child {
+    flex-basis: 2%;
+    text-align: initial;
+}

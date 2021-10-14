@@ -1,0 +1,23 @@
+.pt-md {
+    padding-top: 32px;
+}
+
+.pd-mid {
+    padding: 12px;
+}
+
+.pd-right-sm {
+    padding-right: 6px;
+}
+
+.pd-bt-mid {
+    padding-bottom: 16px;
+}
+
+.pd-bt-sm {
+    padding-bottom: 8px;
+}
+
+.pd-zero {
+    padding: 0px;
+}
