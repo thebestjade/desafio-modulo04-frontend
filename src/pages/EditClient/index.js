@@ -46,26 +46,27 @@ function EditClient({ idClient, setIdClient, setIsOpenClient }) {
       });
       return;
     }
+    setClients({...clients, public_place: logradouro, district: bairro, uf: uf, city: localidade})
     setCity(localidade);
     setDistrict(bairro);
     setStreet(logradouro);
     setState(uf);
   }
 
-  useEffect(() => {
-    if (Object.keys(clients).length > 0 && !!clients.cep) {
-      if (clients.cep.indexOf("-") !== -1) {
-        const cepToSearch = clients.cep.replace(/\D/g, "");
+  const handleSearchCep = (cep) => {
+    if (Object.keys(clients).length > 0 && !!cep) {
+      if (cep.indexOf("-") !== -1) {
+        const cepToSearch = cep.replace(/\D/g, "");
         if (cepToSearch.length === 8) {
           loadCityByCep(cepToSearch);
         }
       } else {
         if (clients.length === 8) {
-          loadCityByCep(clients.cep);
+          loadCityByCep(cep);
         }
       }
     }
-  }, [clients.cep]);
+  };
 
   async function getClient() {
     setReqError("");
@@ -230,8 +231,7 @@ function EditClient({ idClient, setIdClient, setIsOpenClient }) {
                       mask="99999-999"
                       defaultValue={clients.cep}
                       {...register("cep", {
-                        onChange: (e) =>
-                          setClients({ ...clients, cep: e.target.value }),
+                        onChange: (e) => handleSearchCep(e.target.value),
                       })}
                     >
                       {(inputProps) => (
@@ -246,7 +246,7 @@ function EditClient({ idClient, setIdClient, setIsOpenClient }) {
                       className="input-form width-mid"
                       id="street"
                       type="text"
-                      value={street}
+                      // value={street}
                       {...register("logradouro", {
                         onChange: (e) => setStreet(e.target.value),
                       })}
@@ -261,7 +261,7 @@ function EditClient({ idClient, setIdClient, setIsOpenClient }) {
                       className="input-form width-mid"
                       id="local"
                       type="text"
-                      value={district}
+                      // value={district}
                       {...register("bairro", {
                         onChange: (e) => setDistrict(e.target.value),
                       })}
@@ -274,7 +274,7 @@ function EditClient({ idClient, setIdClient, setIsOpenClient }) {
                       className="input-form width-mid"
                       id="city"
                       type="text"
-                      value={city}
+                      // value={city}
                       {...register("cidade", {
                         onChange: (e) => setCity(e.target.value),
                       })}
@@ -299,7 +299,7 @@ function EditClient({ idClient, setIdClient, setIsOpenClient }) {
                       id="estado"
                       type="text"
                       defaultValue={clients.uf}
-                      value={state}
+                      // value={state}
                       {...register("estado", {
                         onChange: (e) => setState(e.target.value),
                       })}
