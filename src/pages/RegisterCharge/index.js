@@ -236,6 +236,7 @@ function CreateCharge() {
 
                             <button
                                 className='btn-cancel mt-lg'
+                                type="button"
                                 onClick={() => history.goBack()}
                             >
                                 Cancelar
