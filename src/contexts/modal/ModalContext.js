@@ -1,8 +1,8 @@
 import { createContext } from 'react';
 
 export const ModalContext = createContext({
-  isOpen: false,
-  setIsOpen: null
+  isOpenUser: false,
+  setIsOpenUser: null,
 })
 
 

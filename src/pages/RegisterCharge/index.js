@@ -48,6 +48,7 @@ const CurrencyInput = ({ maskOptions, ...inputProps }) => {
 };
 
 function CreateCharge() {
+    const { isOpenUser } = useContext(ModalContext);
     const { token } = useContext(TokenContext);
     const { clients, setClients } = useContext(ClientsContext);
 
@@ -94,7 +95,6 @@ function CreateCharge() {
             setReqError("");
             setReqSuccess("");
 
-
             const response = await fetch("https://desafio04-backend.herokuapp.com/cadastrarCobranca", {
                 method: "POST",
                 cache: "no-cache",
@@ -131,11 +131,9 @@ function CreateCharge() {
         setReqSuccess("");
     };
 
-    const { isOpen } = useContext(ModalContext);
-
     return (
         <div className="container-client flex-row">
-            {isOpen && <EditUser />}
+            {isOpenUser && <EditUser />}
             <SideBar />
             <div className='container-form-client flex-column'>
                 <ButtonProfile />

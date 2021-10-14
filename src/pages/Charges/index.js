@@ -17,7 +17,7 @@ function Charges() {
     const { charges, setCharges } = useContext(ChargesContext);
     const { token } = useContext(TokenContext);
     const [reqError, setReqError] = useState("");
-    const { isOpen } = useContext(ModalContext);
+    const { isOpenUser } = useContext(ModalContext);
 
 
     useEffect(() => {
@@ -51,7 +51,7 @@ function Charges() {
 
     return (
         <div className="container-client flex-row">
-            {isOpen && <EditUser />}
+            {isOpenUser && <EditUser />}
             <SideBar />
             <div className=' container-home flex-column overflow-scroll'>
                 <ButtonProfile />

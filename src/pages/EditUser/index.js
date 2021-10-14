@@ -21,7 +21,7 @@ import useStyles from "../../styles/useStyles";
 function EditUser() {
     const classes = useStyles();
     const history = useHistory();
-    const { setIsOpen } = useContext(ModalContext);
+    const { setIsOpenUser } = useContext(ModalContext);
     const {
         handleSubmit,
         register,
@@ -104,7 +104,7 @@ function EditUser() {
                     <div className='container-form flex-column modal-form '>
                         <form className='form margin-top-modal' onSubmit={handleSubmit(updateUser)} onKeyDown={e => (e.code === 'Enter' || e.code === 'NumpadEnter') && e.preventDefault()}>
                             <button className='button-decoration-none align-self-end'
-                                onClick={() => setIsOpen(false)}
+                                onClick={() => setIsOpenUser(false)}
                             >x</button>
                             <div className='text-center mb-lg align-self-start'>
                                 <h4>// EDITAR USUÁRIO</h4>

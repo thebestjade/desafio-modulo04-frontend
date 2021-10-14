@@ -22,6 +22,7 @@ import ModalContext from "../../contexts/modal/ModalContext";
 
 
 function Client() {
+    const { isOpenUser } = useContext(ModalContext);
     const { token } = useContext(TokenContext);
     const classes = useStyles();
     const history = useHistory();
@@ -119,11 +120,9 @@ function Client() {
         setReqSuccess("");
     };
 
-    const { isOpen } = useContext(ModalContext);
-
     return (
         <div className="container-client flex-row">
-            {isOpen && <EditUser />}
+            {isOpenUser && <EditUser />}
             <SideBar />
             <div className='container-form-client flex-column'>
                 <ButtonProfile />

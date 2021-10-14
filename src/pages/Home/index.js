@@ -19,11 +19,11 @@ function ContainerHome({ label, cor }) {
 }
 
 function Home() {
-  const { isOpen } = useContext(ModalContext);
+  const { isOpenUser } = useContext(ModalContext);
 
   return (
     <div className="container-home flex-row">
-      {isOpen && <EditUser/>}
+      {isOpenUser && <EditUser/>}
       <SideBar />
       <div className='body container-home overflow-scroll'>
         <ButtonProfile />

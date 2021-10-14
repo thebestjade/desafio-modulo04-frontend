@@ -59,7 +59,7 @@ function Routes() {
                                         <Route path='/clientes' exact component={Clients} />
                                         <Route path="/cobrancas" exact component={Charges} />
                                         {/* <Route path="/editarUsuario" exact component={EditUser} /> */}
-                                        <Route path="/editarCliente/:clienteId" exact component={EditClient} />
+                                        {/* <Route path="/editarCliente/:clienteId" exact component={EditClient} /> */}
                                         <Route path="/clientes/:clienteId" exact component={DetailClient} />
                                     </ProtectedRoutes>
                                 </ModalProvider>

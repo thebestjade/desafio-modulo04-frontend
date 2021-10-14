@@ -9,7 +9,7 @@ import ModalContext from "../../contexts/modal/ModalContext";
 
 
 function ButtonProfile( url ) {
-    const { isOpen, setIsOpen } = useContext(ModalContext);
+    const { isOpenUser , setIsOpenUser } = useContext(ModalContext);
 
     const [isInputVisible, setIsInputVisible] = useState(false);
 
@@ -28,7 +28,7 @@ function ButtonProfile( url ) {
                 <div className='input-profile-logout'>
                     <button
                         className='flex-row items-center pd-mid button-decoration-none'
-                        onClick={() => setIsOpen(!isOpen)}
+                        onClick={() => setIsOpenUser(!isOpenUser)}
                     >
                         {<IconEdit />}
                         Editar
