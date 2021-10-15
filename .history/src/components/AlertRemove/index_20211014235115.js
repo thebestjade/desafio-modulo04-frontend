@@ -1,0 +1,23 @@
+import './styles.css'
+
+function AlertRemove() {
+    return(
+        <div className=''>
+           <span>Apagar item?</span>
+           <div>
+               <button 
+                    style={{color: '#3A9FF1'}}
+                >
+                    Sim
+               </button>
+               <button 
+                    style={{color: '#FF576B'}}
+                >
+                    Não
+               </button>
+           </div>
+        </div>
+    );
+}
+
+export default AlertRemove;

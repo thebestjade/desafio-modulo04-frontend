@@ -1,0 +1,13 @@
+.modal-remove {
+    width: 119px;
+    height: 46px;
+    background: #F8F8F8;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.modal-remove button {
+    border-radius: 4px;
+    width: 37px;
+    height: 15px;
+    color: #FFF;
+}
