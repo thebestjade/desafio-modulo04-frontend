@@ -1,0 +1,15 @@
+.btn-search {
+    border: 0px;
+    background-color: #374952;
+    border-radius: 8px;
+    width: 124px;
+    height: 40px;
+    color: #FFFFFF;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-search svg {
+    margin-top: 5px;
+}
