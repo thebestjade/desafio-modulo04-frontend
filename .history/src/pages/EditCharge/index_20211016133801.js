@@ -69,7 +69,7 @@ function EditCharge({ idCharge, setIdCharge, setIsOpenCharge }) {
     setReqError("");
 
     const response = await fetch(
-      `https://desafio04-backend.herokuapp.com/cobrancas/`,
+      `https://desafio04-backend.herokuapp.com/cobrancas/${idCharge}`,
       {
         mode: "cors",
         headers: {
@@ -81,7 +81,7 @@ function EditCharge({ idCharge, setIdCharge, setIsOpenCharge }) {
     const data = await response.json();
 
     if (response.ok) {
-      return setCharges(data);
+      return setCharges(data.charge);
     }
     setReqError(data);
   }
@@ -143,7 +143,7 @@ function EditCharge({ idCharge, setIdCharge, setIsOpenCharge }) {
 
   return (
     <div>
-      {!!Object.keys(charges).length && (
+      {/* {!!Object.keys(charges).length && ( */}
         <>
           <div className="container-form flex-column modal-form padding-form-edit">
           <form 
@@ -151,12 +151,6 @@ function EditCharge({ idCharge, setIdCharge, setIsOpenCharge }) {
             onSubmit={handleSubmit(updateCharge)} 
             onKeyDown={e => (e.code === 'Enter' || e.code === 'NumpadEnter') && e.preventDefault()}
             >
-             <button
-                className="button-decoration-none align-self-end"
-                onClick={handleCloseModal}
-              >
-                x
-              </button>
                     <div className='flex-column  content-center items-center'>
                         <div className='flex-column'>
                             <label htmlFor='name'>Charge</label>                          
@@ -165,14 +159,14 @@ function EditCharge({ idCharge, setIdCharge, setIsOpenCharge }) {
                                 id='name'
                                 {...register("clienteId", { required: true })}
                             >
-                                {charges.map(({ id, name }) => (
+                                {/* {charges.map(({ id, name }) => (
                                     <option
                                         value={id}
                                     >
                                         {name}
                                     </option>
-                                ))}
-                                <option selected="selected">Selecione um cliente</option>
+                                ))} */}
+                                <option selected="selected">Selecione o cliente</option>
                             </select>
                         </div>
                         <div className='flex-column'>
@@ -283,7 +277,7 @@ function EditCharge({ idCharge, setIdCharge, setIsOpenCharge }) {
             <CircularProgress color="inherit" />
           </Backdrop>
         </>
-      )}
+      {/* )} */}
     </div>
   );
 }

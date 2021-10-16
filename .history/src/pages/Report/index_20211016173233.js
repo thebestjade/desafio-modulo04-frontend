@@ -14,7 +14,7 @@ import { useState } from "react";
 import EditCharge from "../EditCharge";
 import InputSearch from "../../components/InputSearch";
 
-function Charges() {
+function Report() {
 
     const { charges, setCharges } = useContext(ChargesContext);
     const { token } = useContext(TokenContext);
@@ -98,4 +98,4 @@ function Charges() {
     )
 }
 
-export default Charges;
+export default Report;

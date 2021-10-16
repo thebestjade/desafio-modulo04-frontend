@@ -82,7 +82,7 @@ function EditClient({ idClient, setIdClient, setIsOpenClient }) {
       }
     );
     const data = await response.json();
-    console.log(data);
+
     if (response.ok) {
       return setClients(data.client);
     }

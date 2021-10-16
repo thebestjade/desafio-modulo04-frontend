@@ -151,12 +151,6 @@ function EditCharge({ idCharge, setIdCharge, setIsOpenCharge }) {
             onSubmit={handleSubmit(updateCharge)} 
             onKeyDown={e => (e.code === 'Enter' || e.code === 'NumpadEnter') && e.preventDefault()}
             >
-             <button
-                className="button-decoration-none align-self-end"
-                onClick={handleCloseModal}
-              >
-                x
-              </button>
                     <div className='flex-column  content-center items-center'>
                         <div className='flex-column'>
                             <label htmlFor='name'>Charge</label>                          
@@ -172,7 +166,7 @@ function EditCharge({ idCharge, setIdCharge, setIsOpenCharge }) {
                                         {name}
                                     </option>
                                 ))}
-                                <option selected="selected">Selecione um cliente</option>
+                                <option selected="selected">Selecione o cliente</option>
                             </select>
                         </div>
                         <div className='flex-column'>

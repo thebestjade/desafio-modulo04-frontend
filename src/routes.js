@@ -22,6 +22,7 @@ import RegisterUser from './pages/RegisterUser';
 import RegisterClient from './pages/RegisterClient';
 import RegisterCharge from './pages/RegisterCharge';
 import EditCharge from './pages/EditCharge';
+import Report from './pages/Report';
 
 
 function ProtectedRoutes(props) {
@@ -62,8 +63,8 @@ function Routes() {
                                         {/* <Route path="/editarUsuario" exact component={EditUser} /> */}
                                         {/* <Route path="/editarCliente/:clienteId" exact component={EditClient} /> */}
                                         <Route path="/editarCharge/:chargeId" exact component={EditCharge} />
-
                                         <Route path="/clientes/:clienteId" exact component={DetailClient} />
+                                        <Route path="/relatorios" exact component={Report} />
                                     </ProtectedRoutes>
                                 </ModalProvider>
                             </ClientsProvider>

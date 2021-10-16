@@ -13,8 +13,9 @@ import ModalContext from "../../contexts/modal/ModalContext";
 import { useState } from "react";
 import EditCharge from "../EditCharge";
 import InputSearch from "../../components/InputSearch";
+import { Breadcrumbs } from "@material-ui/core";
 
-function Charges() {
+function Report() {
 
     const { charges, setCharges } = useContext(ChargesContext);
     const { token } = useContext(TokenContext);
@@ -66,7 +67,9 @@ function Charges() {
             <SideBar />
             <div className=' container-home flex-column overflow-scroll'>
                 <ButtonProfile />
+                <Breadcrumbs/>
                 <div className='container-charge '>
+                    
                     <InputSearch />
                     <HeaderTable titles={['ID', 'Cliente', 'Descrição', 'Valor', 'Status', 'Vencimento']} />
                     {charges.map((charge) => (
@@ -98,4 +101,4 @@ function Charges() {
     )
 }
 
-export default Charges;
+export default Report;

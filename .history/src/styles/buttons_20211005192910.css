@@ -66,11 +66,3 @@
     background-color: transparent;   
     cursor: pointer;
 }
-
-.button-appearance-none {
-    border: none;
-    background: transparent;
-    appearance: none;
-    display: contents;
-    cursor: pointer;
-}
