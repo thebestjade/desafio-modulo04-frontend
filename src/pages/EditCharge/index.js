@@ -195,19 +195,21 @@ function EditCharge({ idCharge, setIdCharge, setIsOpenCharge }) {
               <button
                 className="button-decoration-none align-self-end"
                 onClick={handleCloseModal}
+                type="button"
               >
                 x
               </button>
               <div className="flex-column  content-center items-center">
                 <div className="flex-column">
-                  <label htmlFor="clienteId">Charge</label>
+                  <label htmlFor="clienteId">Cliente</label>
                   <select
                     className="input-form width-lg mb-md"
                     id="clienteId"
+                    defaultValue={charge.name}
                     {...register("clienteId", { required: true })}
                   >
                     {clients.map(({ id, name }) => (
-                      <option value={id} selected={name === charge.name}>
+                      <option key={id} value={id}>
                         {name}
                       </option>
                     ))}

@@ -95,6 +95,7 @@ function Client() {
           <button
             className="btn-add-client mg-top-client"
             onClick={() => history.push("/cadastrarCliente")}
+            type="button"
           >
             Adicionar Cliente
           </button>
