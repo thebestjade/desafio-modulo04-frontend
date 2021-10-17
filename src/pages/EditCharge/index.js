@@ -1,61 +1,62 @@
 /* eslint-disable no-sequences */
 /* eslint-disable react/jsx-no-comment-textnodes */
 import React, { useState, useEffect, useContext } from "react";
-import ReactDatePicker, { registerLocale } from 'react-datepicker';
+import ReactDatePicker, { registerLocale } from "react-datepicker";
 import { Controller, useForm } from "react-hook-form";
-import { useHistory } from "react-router-dom";
-import {
-    Backdrop,
-    CircularProgress
-} from "@material-ui/core";
+import { Backdrop, CircularProgress } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
-import ButtonSubmit from '../../components/ButtonSubmit';
-import MaskedInput from 'react-text-mask';
-import createNumberMask from 'text-mask-addons/dist/createNumberMask';
+import ButtonSubmit from "../../components/ButtonSubmit";
+import MaskedInput from "react-text-mask";
+import createNumberMask from "text-mask-addons/dist/createNumberMask";
 import ptBR from "date-fns/locale/pt-BR";
 
-import './styles.css';
-import '../../styles/form.css';
+import "./styles.css";
+import "../../styles/form.css";
 import useStyles from "../../styles/useStyles";
 import TokenContext from "../../contexts/token/TokenContext";
+import ClientsContext from "../../contexts/client/ClientsContext";
+import ChargesContext from "../../contexts/charge/ChargesContexts";
 import IconTrash from "../../assets/IconTrash";
 import AlertRemove from "../../components/AlertRemove";
+import { getCharges } from "../Charges";
 
-registerLocale('pt-BR', ptBR);
+registerLocale("pt-BR", ptBR);
 
 const defaultMaskOptions = {
-  prefix: 'R$ ',
-  suffix: '',
+  prefix: "R$ ",
+  suffix: "",
   includeThousandsSeparator: true,
-  thousandsSeparatorSymbol: '.',
+  thousandsSeparatorSymbol: ".",
   allowDecimal: true,
-  decimalSymbol: ',',
+  decimalSymbol: ",",
   decimalLimit: 2,
   integerLimit: 10,
   allowNegative: false,
   allowLeadingZeroes: false,
-}
+};
 
 const CurrencyInput = ({ maskOptions, ...inputProps }) => {
   const currencyMask = createNumberMask({
-      ...defaultMaskOptions,
-      ...maskOptions,
-  })
+    ...defaultMaskOptions,
+    ...maskOptions,
+  });
 
-  return <MaskedInput mask={currencyMask} {...inputProps} />
+  return <MaskedInput mask={currencyMask} {...inputProps} />;
 };
 
 function EditCharge({ idCharge, setIdCharge, setIsOpenCharge }) {
   const classes = useStyles();
 
   const {
-      handleSubmit,
-      control,
-      register, 
-      formState: { isValid }
-  } = useForm({ mode: 'onChange' });
+    handleSubmit,
+    control,
+    register,
+    formState: { isValid },
+  } = useForm({ mode: "onChange" });
   const { token } = useContext(TokenContext);
-  const [charges, setCharges] = useState({});
+  const { clients } = useContext(ClientsContext);
+  const { setCharges } = useContext(ChargesContext);
+  const [charge, setCharge] = useState({});
   const [loading, setLoading] = useState(false);
   const [reqError, setReqError] = useState("");
   const [reqSuccess, setReqSuccess] = useState("");
@@ -65,11 +66,20 @@ function EditCharge({ idCharge, setIdCharge, setIsOpenCharge }) {
     setIsOpenAlert(status);
   };
 
+  const handleCloseModal = () => {
+    setIdCharge(null);
+    setIsOpenCharge(false);
+  };
+  const closeAlert = () => {
+    setReqError("");
+    setReqSuccess("");
+  };
+
   async function getCharge() {
     setReqError("");
 
     const response = await fetch(
-      `https://desafio04-backend.herokuapp.com/cobrancas/`,
+      `https://desafio04-backend.herokuapp.com/cobrancas/${idCharge}`,
       {
         mode: "cors",
         headers: {
@@ -81,12 +91,14 @@ function EditCharge({ idCharge, setIdCharge, setIsOpenCharge }) {
     const data = await response.json();
 
     if (response.ok) {
-      return setCharges(data);
+      return setCharge(data);
     }
     setReqError(data);
   }
 
   async function updateCharge(updateData) {
+    const newValue = Number(updateData.valor.replace(/\D/g, ""));
+    const newUpdateData = { ...updateData, valor: newValue.toString() };
 
     try {
       setLoading(true);
@@ -100,7 +112,7 @@ function EditCharge({ idCharge, setIdCharge, setIsOpenCharge }) {
           mode: "cors",
           cache: "no-cache",
           credentials: "same-origin",
-          body: JSON.stringify(updateData),
+          body: JSON.stringify(newUpdateData),
           headers: {
             "Content-type": "application/json",
             Authorization: token,
@@ -114,7 +126,7 @@ function EditCharge({ idCharge, setIdCharge, setIsOpenCharge }) {
 
       if (response.ok) {
         setReqSuccess(data);
-        getCharge();
+        getCharges(token, setCharges, setReqError);
         const timer = setTimeout(() => {
           handleCloseModal();
           clearTimeout(timer);
@@ -127,157 +139,196 @@ function EditCharge({ idCharge, setIdCharge, setIsOpenCharge }) {
       setReqError(error.message);
     }
   }
-  const handleCloseModal = () => {
-    setIdCharge(null);
-    setIsOpenCharge(false);
-  };
-  const closeAlert = () => {
-    setReqError("");
-    setReqSuccess("");
-  };
 
+  async function deleteCharge(idCharge) {
+    try {
+      setLoading(true);
+      setReqError("");
+      setReqSuccess("");
+      const response = await fetch(
+        `https://desafio04-backend.herokuapp.com/deletarCobranca/${idCharge}`,
+        {
+          method: "DELETE",
+          headers: {
+            mode: "cors",
+            "Content-type": "application/json",
+            Authorization: token,
+          },
+        }
+      );
+      const data = await response.json();
+      setLoading(false);
+
+      if (response.ok) {
+        setReqSuccess(data);
+        getCharges(token, setCharges, setReqError);
+        const timer = setTimeout(() => {
+          handleCloseModal();
+          clearTimeout(timer);
+        }, 2000);
+        return;
+      }
+
+      setReqError(data);
+    } catch (error) {
+      setReqError(error);
+    }
+  }
   useEffect(() => {
     getCharge();
+    // eslint-disable-next-line
   }, []);
-
 
   return (
     <div>
-      {!!Object.keys(charges).length && (
+      {!!Object.keys(charge).length && (
         <>
           <div className="container-form flex-column modal-form padding-form-edit">
-          <form 
-            className='form width-lg label-form' 
-            onSubmit={handleSubmit(updateCharge)} 
-            onKeyDown={e => (e.code === 'Enter' || e.code === 'NumpadEnter') && e.preventDefault()}
+            <form
+              className="form width-lg label-form"
+              onSubmit={handleSubmit(updateCharge)}
+              onKeyDown={(e) =>
+                (e.code === "Enter" || e.code === "NumpadEnter") &&
+                e.preventDefault()
+              }
             >
-             <button
+              <button
                 className="button-decoration-none align-self-end"
                 onClick={handleCloseModal}
               >
                 x
               </button>
-                    <div className='flex-column  content-center items-center'>
-                        <div className='flex-column'>
-                            <label htmlFor='name'>Charge</label>                          
-                            <select
-                                className='input-form width-lg mb-md'
-                                id='name'
-                                {...register("clienteId", { required: true })}
-                            >
-                                {charges.map(({ id, name }) => (
-                                    <option
-                                        value={id}
-                                    >
-                                        {name}
-                                    </option>
-                                ))}
-                                <option selected="selected">Selecione um cliente</option>
-                            </select>
-                        </div>
-                        <div className='flex-column'>
-                            <label htmlFor='description'>Descrição</label>
-                            <input
-                                className='input-form width-lg input-description'
-                                id='description'
-                                type="text"
-                                {...register('descricao', { required: true })}
-                            />
-                            <span className='label-description'>A descrição informada será impressa  no boleto</span>
-                        </div>
-                        <div className='flex-column'>
-                            <label htmlFor='status'>Status</label>
-                            <select
-                                defaultValue={charges.city}
-                                className='input-form width-lg mb-md'
-                                id='name'
-                                {...register("status", { required: true })}
-                            >
-                                <option>
-                                    Pendente
-                                </option>
-                                <option>
-                                    Pago
-                                </option>
-                                <option selected>Selecione um status</option>
-                            </select>
-                        </div>
-                        <div className='flex-row form-gap' >
-                            <div className='flex-column'>
-                                <label htmlFor='value'>Valor</label>
-                                <Controller
-                                    control={control}
-                                    id='valor'
-                                    {...register('valor', { required: true })}
-                                    render={({ field }) => (
-                                        <CurrencyInput
-                                            onChange={(value) => field.onChange(value)}
-                                            value={field.value}
-                                            placeholder='R$ 0,00'
-                                            className='input-form width-mid' type="text"
-                                        />
-                                    )}
-                                />
+              <div className="flex-column  content-center items-center">
+                <div className="flex-column">
+                  <label htmlFor="clienteId">Charge</label>
+                  <select
+                    className="input-form width-lg mb-md"
+                    id="clienteId"
+                    {...register("clienteId", { required: true })}
+                  >
+                    {clients.map(({ id, name }) => (
+                      <option value={id} selected={name === charge.name}>
+                        {name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex-column">
+                  <label htmlFor="descricao">Descrição</label>
+                  <input
+                    className="input-form width-lg input-description"
+                    id="descricao"
+                    defaultValue={charge.description}
+                    type="text"
+                    {...register("descricao", { required: true })}
+                  />
+                  <span className="label-description">
+                    A descrição informada será impressa no boleto
+                  </span>
+                </div>
+                <div className="flex-column">
+                  <label htmlFor="status">Status</label>
+                  <select
+                    defaultValue={charge.status}
+                    className="input-form width-lg mb-md"
+                    id="status"
+                    {...register("status", { required: true })}
+                  >
+                    <option>Pendente</option>
+                    <option>Pago</option>
+                    <option selected>Selecione um status</option>
+                  </select>
+                </div>
+                <div className="flex-row form-gap">
+                  <div className="flex-column">
+                    <label htmlFor="valor">Valor</label>
+                    <Controller
+                      control={control}
+                      id="valor"
+                      defaultValue={charge.value}
+                      {...register("valor", { required: true })}
+                      render={({ field }) => (
+                        <CurrencyInput
+                          onChange={(value) => field.onChange(value)}
+                          value={field.value}
+                          placeholder="R$ 0,00"
+                          className="input-form width-mid"
+                          type="text"
+                        />
+                      )}
+                    />
+                  </div>
+                  <div className="flex-column">
+                    <label htmlFor="vencimento">Vencimento</label>
+                    <Controller
+                      control={control}
+                      id="vencimento"
+                      defaultValue={new Date(charge.due_date)}
+                      {...register("vencimento", { required: true })}
+                      render={({ field }) => (
+                        <ReactDatePicker
+                          className="input-form"
+                          onChange={(date) => field.onChange(date)}
+                          selected={field.value}
+                          locale="pt-BR"
+                          dateFormat="dd 'de' MMMM 'de' yyyy"
+                        />
+                      )}
+                    />
+                  </div>
+                </div>
 
-                            </div>
-                            <div className='flex-column'>
-                                <label htmlFor='dueDate'>Vencimento</label>
-                                <Controller
-                                    control={control}
-                                    id='dueDate'
-                                    {...register('vencimento', { required: true })}
-                                    render={({ field }) => (
-                                        <ReactDatePicker
-                                            className='input-form'
-                                            onChange={(date) => field.onChange(date)}
-                                            selected={field.value}
-                                            locale='pt-BR'
-                                            dateFormat="dd 'de' MMMM 'de' yyyy"
-                                        />
-                                    )}
-                                />
-                            </div>
-                        </div>
+                {reqSuccess && (
+                  <Alert severity="success" onClose={closeAlert}>
+                    {reqSuccess}
+                  </Alert>
+                )}
 
-                        {reqSuccess && (<Alert severity="success" onClose={closeAlert}>
-                            {reqSuccess}
-                        </Alert>)}
+                {reqError && (
+                  <Alert severity="error" onClose={closeAlert}>
+                    {reqError}
+                  </Alert>
+                )}
 
-                        {reqError && (<Alert severity="error" onClose={closeAlert}>
-                            {reqError}
-                        </Alert>)}
+                <Backdrop className={classes.backdrop} open={loading}>
+                  <CircularProgress color="inherit" />
+                </Backdrop>
 
-                        <Backdrop className={classes.backdrop} open={loading}>
-                            <CircularProgress color="inherit" />
-                        </Backdrop>
+                <div className="align-self-start flex-row items-center">
+                  <IconTrash />
+                  <button
+                    type="button"
+                    onClick={() => handleOpenAlert(true)}
+                    className="button-appearance-none"
+                  >
+                    <u style={({ color: "#868686" }, { marginLeft: "4px" })}>
+                      Excluir cobrança
+                    </u>
+                  </button>
+                  {isOpenAlert && (
+                    <AlertRemove
+                      deleteCharge={() => deleteCharge(charge.id)}
+                      closeAlert={() => handleOpenAlert(false)}
+                    />
+                  )}
+                </div>
 
-                        <div className='align-self-start flex-row items-center'>
-                            <IconTrash />
-                            <button 
-                              onClick={() => handleOpenAlert(true)}
-                              className='button-appearance-none'>
-                              <u style={{color: '#868686'}, {marginLeft: '4px'}}>Excluir cobrança</u>
-                            </button>
-                            {isOpenAlert && <AlertRemove closeAlert={() => handleOpenAlert(false)}/>}
-                        </div>
+                <div className="flex-row form-gap ml-auto">
+                  <button
+                    onClick={handleCloseModal}
+                    className="btn-cancel mt-lg"
+                    type="button"
+                  >
+                    Cancelar
+                  </button>
 
-                        <div className='flex-row form-gap ml-auto'>
-
-                            <button
-                                onClick={handleCloseModal}
-                                className='btn-cancel mt-lg'
-                                type="button"
-                            >
-                                Cancelar
-                            </button>
-
-                            <ButtonSubmit
-                                label='Editar cobrança'
-                                color={isValid && '#DA0175'}
-                            />
-                        </div>
-                    </div>
-                </form>
+                  <ButtonSubmit
+                    label="Editar cobrança"
+                    color={isValid && "#DA0175"}
+                  />
+                </div>
+              </div>
+            </form>
           </div>
           <Backdrop className={classes.backdrop} open={loading}>
             <CircularProgress color="inherit" />

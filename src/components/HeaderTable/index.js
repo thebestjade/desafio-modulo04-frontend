@@ -1,21 +1,24 @@
 /* eslint-disable no-unused-vars */
-import './styles.css'
+import "./styles.css";
 
 function HeaderTable({ titles }) {
+//   const listItems = titles.map((title) => (
+//     <li className="li" key={title.toString()}>
+//       {title}
+//     </li>
+//   ));
 
-    const listItems = titles.map((title) =>
-        <li className='li' key={title.toString()}>
+  return (
+    <div className="header-table flex-row">
+      <ul className="list flex-row">
+        {titles.map((title) => (
+          <li className="li" key={title.toString()}>
             {title}
-        </li>
-    );
-
-    return (
-        <div className='header-table flex-row'>
-            <ul className='list flex-row'>
-                {listItems}
-            </ul>
-        </div>
-    );
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 }
 
 export default HeaderTable;

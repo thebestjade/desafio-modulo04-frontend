@@ -46,12 +46,12 @@ function ContainerClient({
         <span
           className="status flex-basis-mid"
           style={
-            status.toUpperCase() === "EM_DIA"
+            status.toUpperCase() === "EM DIA"
               ? { color: "#4EC06E" }
               : { color: "#FF4D4D" }
           }
         >
-          {status.toUpperCase() === "EM_DIA" ? "EM DIA" : "INADIMPLENTE"}
+          {status.toUpperCase()}
         </span>
         <button className="button-edit-client" onClick={openEditClient}>
           {<IconEdit />}

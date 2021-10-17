@@ -19,6 +19,28 @@ import EditClient from "../EditClient";
 import DetailClient from "../DetailClient";
 import InputSearch from "../../components/InputSearch";
 
+export async function getClient(token, setClients, setReqError) {
+  setReqError("");
+
+  const response = await fetch(
+    "https://desafio04-backend.herokuapp.com/clientes",
+    {
+      headers: {
+        "Content-type": "application/json",
+        mode: "cors",
+        Authorization: token,
+      },
+    }
+  );
+
+  const data = await response.json();
+
+  if (response.ok) {
+    return setClients(data);
+  }
+  setReqError(data);
+}
+
 function Client() {
   const history = useHistory();
   const { token } = useContext(TokenContext);
@@ -27,8 +49,7 @@ function Client() {
   const [idClient, setIdClient] = useState(null);
   const [isOpenClient, setIsOpenClient] = useState(false);
   const [isOpenDetailClient, setIsOpenDetailClient] = useState(false);
-  const { isOpenUser } =
-    useContext(ModalContext);
+  const { isOpenUser } = useContext(ModalContext);
 
   const closeAlert = () => {
     setReqError("");
@@ -36,50 +57,41 @@ function Client() {
   };
 
   const handleOpenEditClient = (id) => {
-      setIdClient(id);
-      setIsOpenClient(true);
+    setIdClient(id);
+    setIsOpenClient(true);
   };
 
   const handleOpenDetailClient = (id) => {
-      setIdClient(id);
-      setIsOpenDetailClient(true);
+    setIdClient(id);
+    setIsOpenDetailClient(true);
   };
 
   useEffect(() => {
-    async function getClient() {
-      setReqError("");
-
-      const response = await fetch(
-        "https://desafio04-backend.herokuapp.com/clientes",
-        {
-          headers: {
-            "Content-type": "application/json",
-            mode: "cors",
-            Authorization: token,
-          },
-        }
-      );
-
-      const data = await response.json();
-
-      if (response.ok) {
-        return setClients(data.clients);
-      }
-      setReqError(data);
-    }
-    getClient();
-  }, [token, setClients]);
+    getClient(token, setClients, setReqError);
+  }, []);
 
   return (
     <div className="client container-client flex-row">
       {isOpenUser && <EditUser />}
-      {isOpenClient && idClient && <EditClient idClient={idClient} setIdClient={setIdClient} setIsOpenClient={setIsOpenClient} />}
-      {isOpenDetailClient && idClient && <DetailClient idClient={idClient} setIdClient={setIdClient} setIsOpenDetailClient={setIsOpenDetailClient} />}
+      {isOpenClient && idClient && (
+        <EditClient
+          idClient={idClient}
+          setIdClient={setIdClient}
+          setIsOpenClient={setIsOpenClient}
+        />
+      )}
+      {isOpenDetailClient && idClient && (
+        <DetailClient
+          idClient={idClient}
+          setIdClient={setIdClient}
+          setIsOpenDetailClient={setIsOpenDetailClient}
+        />
+      )}
       <SideBar />
       <div className="container-home flex-column overflow-scroll">
         <ButtonProfile />
 
-      <div className='flex-row align-baseline space-between'>        
+        <div className="flex-row align-baseline space-between">
           <button
             className="btn-add-client mg-top-client"
             onClick={() => history.push("/cadastrarCliente")}
@@ -87,9 +99,8 @@ function Client() {
             Adicionar Cliente
           </button>
 
-          <InputSearch className='align-end'/>
+          <InputSearch className="align-end" />
         </div>
-
 
         <HeaderTable
           titles={[
@@ -105,7 +116,6 @@ function Client() {
             <div className="container-home flex-column overflow-scroll">
               {clients.map((client) => (
                 <div>
-                  {console.log(client.id)}
                   <ContainerClient
                     id={client.id}
                     name={client.name}

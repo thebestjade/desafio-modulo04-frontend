@@ -43,7 +43,6 @@ function DetailClient({
 
       const { client, clientCharges } = await response.json();
       if (response.ok) {
-        console.log({ client, clientCharges });
         setClients(client);
         return setCharges(clientCharges);
       }

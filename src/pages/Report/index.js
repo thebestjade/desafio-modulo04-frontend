@@ -101,7 +101,6 @@ function Report() {
               className='button-appearance-none'
               onClick={() => handleOpenEditCharge(charge.id)}
             >
-              {console.log(charge.id, isOpenCharge)}
               <ContainerCharge
                 description={charge.description}
                 dueDate={Intl.DateTimeFormat('pt-br', { year: 'numeric', month: 'numeric', day: 'numeric' }).format(new Date(charge.due_date))

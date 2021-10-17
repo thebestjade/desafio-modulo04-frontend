@@ -70,13 +70,14 @@ function CreateCharge() {
             const response = await fetch('https://desafio04-backend.herokuapp.com/clientes', {
                 headers: {
                     "Content-type": "application/json",
+                    mode: "cors",
                     Authorization: token,
                 },
             });
 
-            const { clients } = await response.json();
+            const data = await response.json();
             if (response.ok) {
-                return setClients(clients);
+                return setClients(data);
             }
 
         }
@@ -89,7 +90,6 @@ function CreateCharge() {
         const newValue = Number(addData.valor.replace(/\D/g,""));
         const newAddData = {...addData, valor: (newValue).toString()}
 
-        console.log(addData, newAddData)
         try {
             setLoading(true);
             setReqError("");
