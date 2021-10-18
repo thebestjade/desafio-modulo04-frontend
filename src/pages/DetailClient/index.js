@@ -58,7 +58,6 @@ function DetailClient({
   const closeAlert = () => {
     setReqError("");
   };
-  useEffect(() => console.log("reqError", reqError), [reqError]);
 
   return (
     <div className="container-form flex-column modal-form">

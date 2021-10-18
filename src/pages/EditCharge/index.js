@@ -6,8 +6,6 @@ import { Controller, useForm } from "react-hook-form";
 import { Backdrop, CircularProgress } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import ButtonSubmit from "../../components/ButtonSubmit";
-import MaskedInput from "react-text-mask";
-import createNumberMask from "text-mask-addons/dist/createNumberMask";
 import ptBR from "date-fns/locale/pt-BR";
 
 import "./styles.css";
@@ -18,33 +16,10 @@ import ChargesContext from "../../contexts/charge/ChargesContexts";
 import IconTrash from "../../assets/IconTrash";
 import AlertRemove from "../../components/AlertRemove";
 import { getCharges } from "../Charges";
-import useCurrencyMask from "../../hooks/useCurrencyMask";
 import { getClients } from "../Clients/index";
 import Select from "../../components/Select";
 
 registerLocale("pt-BR", ptBR);
-
-const defaultMaskOptions = {
-  prefix: "R$ ",
-  suffix: "",
-  includeThousandsSeparator: true,
-  thousandsSeparatorSymbol: ".",
-  allowDecimal: true,
-  decimalSymbol: ",",
-  decimalLimit: 2,
-  integerLimit: 10,
-  allowNegative: false,
-  allowLeadingZeroes: false,
-};
-
-const CurrencyInput = ({ maskOptions, ...inputProps }) => {
-  const currencyMask = createNumberMask({
-    ...defaultMaskOptions,
-    ...maskOptions,
-  });
-
-  return <MaskedInput mask={currencyMask} {...inputProps} />;
-};
 
 function EditCharge({ idCharge, setIdCharge, setIsOpenCharge }) {
   const classes = useStyles();
@@ -53,6 +28,7 @@ function EditCharge({ idCharge, setIdCharge, setIsOpenCharge }) {
     handleSubmit,
     control,
     register,
+    setValue,
     formState: { isValid },
   } = useForm({ mode: "onChange" });
   const { token } = useContext(TokenContext);
@@ -63,8 +39,20 @@ function EditCharge({ idCharge, setIdCharge, setIsOpenCharge }) {
   const [reqError, setReqError] = useState("");
   const [reqSuccess, setReqSuccess] = useState("");
   const [isOpenAlert, setIsOpenAlert] = useState(false);
-  // const currencyFormat = {prefix: 'R$', radixPoint: ',', groupSeparator: '.', required: true}
-  // const currency = useCurrencyMask(register, currencyFormat)
+
+  const currency = (valor) => {
+    console.log(valor)
+    let value = valor;
+    value = value.replace(/\D/g, "");
+    value = value.replace(/(\d)(\d{2})$/, "$1,$2");
+    value = value.replace(/(?=(\d{3})+(\D))\B/g, ".");
+    console.log("value", value);
+    
+    if (value.length === 0) return ''
+
+    return `R$ ${value}`;
+  };
+
   const handleOpenAlert = (status) => {
     setIsOpenAlert(status);
   };
@@ -104,16 +92,19 @@ function EditCharge({ idCharge, setIdCharge, setIsOpenCharge }) {
   }
 
   async function updateCharge(updateData) {
-    const newValue = Number(updateData.valor.replace(/\D/g, ""));
+    let newValue = updateData.valor;
+    newValue = newValue.replace(/R\$ /g, "");
+    console.log("newValue", newValue);
     const idCliente = clients
       .find((client) => client.name === charge.name)
       ?.id.toString();
     const newUpdateData = {
       ...updateData,
-      valor: newValue.toString(),
+      valor: newValue,
       clienteId: idCliente,
     };
 
+    console.log({ newUpdateData, updateData });
     try {
       setReqError("");
       setReqSuccess("");
@@ -255,23 +246,13 @@ function EditCharge({ idCharge, setIdCharge, setIsOpenCharge }) {
                 <div className="flex-row form-gap">
                   <div className="flex-column">
                     <label htmlFor="valor">Valor</label>
-
-                    <Controller
-                      control={control}
-                      id="valor"
-                      defaultValue={charge.value}
+                    <input
+                      type="text"
                       {...register("valor", { required: true })}
-                      // ref={currency}
-                      render={({ field }) => (
-                        // <input inputMode="numeric" name="valor" id="valor"  defaultValue={charge.value} {...register("valor", { required: true })}/>
-                        <CurrencyInput
-                          onChange={(value) => field.onChange(value)}
-                          value={field.value}
-                          placeholder="R$ 0,00"
-                          className="input-form width-mid"
-                          type="text"
-                        />
-                      )}
+                      placeholder="R$ 999.999,99"
+                      defaultValue={currency(charge.value)}
+                      className="input-form width-mid"
+                      onChange={(e) => setValue("valor", currency(e.target.value))}
                     />
                   </div>
                   <div className="flex-column">

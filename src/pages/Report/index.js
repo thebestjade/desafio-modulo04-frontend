@@ -133,7 +133,6 @@ function Report() {
     handleDataToShow();
   }, [charges, clients, status]);
 
-  useEffect(() => console.log("dataToShow", dataToShow), [dataToShow]);
   const RenderItems = () => {
     return entity === "clientes"
       ? clients.map((client) => (

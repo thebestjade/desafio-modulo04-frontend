@@ -38,7 +38,6 @@ export async function getClients(
     });
 
     const data = await response.json();
-    console.log(data)
 
     if (response.ok) {
       return setClients(data);
