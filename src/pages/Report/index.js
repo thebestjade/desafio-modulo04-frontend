@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Alert } from "@material-ui/lab";
-import ClientsContext from "../../contexts/client/ClientsContext";
 import TokenContext from "../../contexts/token/TokenContext";
 import ModalContext from "../../contexts/modal/ModalContext";
 import ReportContext from "../../contexts/report/ReportContext";
@@ -14,7 +13,6 @@ import ContainerCharge from "../../components/ContainerCharge";
 import ContainerClient from "../../components/ContainerClient";
 import "./styles.css";
 import Breadcrumb from "./Breadcrumb";
-import ChargesContext from "../../contexts/charge/ChargesContexts";
 import { getClients } from "../Clients";
 import { getCharges } from "../Charges";
 
@@ -30,7 +28,7 @@ function Report() {
   const [isOpenCharge, setIsOpenCharge] = useState(false);
   const [loading, setLoading] = useState(false);
   const [searchValue, setSearchValue] = useState("");
-  const [dataToShow, setDataToShow] = useState([]);
+  const [filteredItems, setFilteredItems] = useState([]);
   const [idClient, setIdClient] = useState(null);
   const [isOpenClient, setIsOpenClient] = useState(false);
   const [isOpenDetailClient, setIsOpenDetailClient] = useState(false);
@@ -56,32 +54,37 @@ function Report() {
 
   const handleInputSearch = (e) => {
     setSearchValue(e.target.value);
-    if (e.target.value === "") {
-      if (clients.length > 0) {
-        return setDataToShow(() =>
-          clients.filter((client) => client.status === status)
-        );
-      } else if (charges.length > 0) {
-        return setDataToShow(() =>
-          charges.filter((charge) => charge.status === status)
-        );
-      }
-    }
   };
 
+  useEffect(() => {
+    if (searchValue.length === 0) {
+      setFilteredItems([])
+    }
+  },[searchValue])
+
   const handleSearch = () => {
-    if (searchValue !== "" && dataToShow.length > 0) {
-      const filteredData = dataToShow.filter(
-        (item) =>
-          (!!item.name && item.name.toLowerCase().includes(searchValue)) ||
-          (!!item.email && item.email.toLowerCase().includes(searchValue)) ||
-          (!!item.phone &&
-            item.phone.replace(/[(|)|-]/g, "").includes(searchValue)) ||
-          (!!item.id && item.id.toString().includes(searchValue))
-      );
-      return setDataToShow(filteredData);
+    if (entity === "clientes") {
+      if (clients.length > 0) {
+        const filteredData = clients.filter(
+          (item) =>
+            (!!item.name && item.name.toLowerCase().includes(searchValue)) ||
+            (!!item.email && item.email.toLowerCase().includes(searchValue)) ||
+            (!!item.phone &&
+              item.phone.replace(/[(|)|-]/g, "").includes(searchValue))
+        );
+        return setFilteredItems(filteredData);
+      }
+    } else if (entity === "cobrancas") {
+      if (charges.length > 0) {
+        const filteredData = charges.filter(
+          (item) =>
+            (!!item.name && item.name.toLowerCase().includes(searchValue)) ||
+            (!!item.id && item.id.toString().includes(searchValue))
+        );
+        return setFilteredItems(filteredData);
+      }
     } else {
-      setDataToShow([]);
+      setFilteredItems([]);
     }
   };
 
@@ -92,18 +95,8 @@ function Report() {
       const url = `https://desafio04-backend.herokuapp.com/${entity}?status=${status}`;
       try {
         entity === "clientes"
-          ? getClients(
-              token,
-              setClients,
-              setReqError,
-              url
-            )
-          : getCharges(
-              token,
-              setCharges,
-              setReqError,
-              url
-            );
+          ? getClients(token, setClients, setReqError, url)
+          : getCharges(token, setCharges, setReqError, url);
         setLoading(false);
       } catch (error) {
         setLoading(false);
@@ -117,21 +110,6 @@ function Report() {
     };
     // eslint-disable-next-line
   }, [entity, status, token, isOpenCharge]);
-
-  useEffect(() => {
-    const handleDataToShow = () => {
-      if (clients.length > 0) {
-        return setDataToShow(() =>
-          clients.filter((client) => client.status === status)
-        );
-      } else if (charges.length > 0) {
-        return setDataToShow(() =>
-          charges.filter((charge) => charge.status === status)
-        );
-      }
-    };
-    handleDataToShow();
-  }, [charges, clients, status]);
 
   const RenderItems = () => {
     return entity === "clientes"
@@ -178,6 +156,53 @@ function Report() {
           </button>
         ));
   };
+
+  const RenderFilteredItems = () => {
+    return entity === "clientes"
+      ? filteredItems.map((client) => (
+          <button
+            key={client.id}
+            className="button-appearance-none"
+            type="button"
+            onClick={() => handleOpenEditCharge(client.id)}
+          >
+            <ContainerClient
+              id={client.id}
+              name={client.name}
+              email={client.email}
+              phone={client.phone}
+              cpf={client.cpf}
+              totalcharges={client.totalcharges}
+              totalchargespaid={client.totalchargespaid}
+              status={client.status}
+              openDetailClient={() => handleOpenDetailClient(client.id)}
+              openEditClient={() => handleOpenEditClient(client.id)}
+            />
+          </button>
+        ))
+      : filteredItems.map((charge) => (
+          <button
+            key={charge.id}
+            className="button-appearance-none"
+            type="button"
+            onClick={() => handleOpenEditCharge(charge.id)}
+          >
+            <ContainerCharge
+              description={charge.description}
+              dueDate={Intl.DateTimeFormat("pt-br", {
+                year: "numeric",
+                month: "numeric",
+                day: "numeric",
+              }).format(new Date(charge.due_date))}
+              id={charge.id}
+              name={charge.name}
+              status={charge.status}
+              value={charge.value}
+            />
+          </button>
+        ));
+  };
+
   useEffect(
     () =>
       entity === "cobrancas" &&
@@ -205,6 +230,7 @@ function Report() {
             <Breadcrumb />
             <InputSearch
               className="align-end"
+              entity={entity}
               value={searchValue}
               onChange={handleInputSearch}
               onClick={handleSearch}
@@ -220,8 +246,11 @@ function Report() {
               "Vencimento",
             ]}
           />
-          {(clients.length > 0 || charges.length > 0) && loading === false && (
-            <RenderItems />
+          {filteredItems.length > 0 ? (
+            <RenderFilteredItems />
+          ) : (
+            (clients.length > 0 || charges.length > 0) &&
+            loading === false && <RenderItems />
           )}
           <div className="items-center mg-error">
             {reqError && (

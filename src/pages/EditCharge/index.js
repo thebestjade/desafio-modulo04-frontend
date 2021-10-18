@@ -18,6 +18,7 @@ import AlertRemove from "../../components/AlertRemove";
 import { getCharges } from "../Charges";
 import { getClients } from "../Clients/index";
 import Select from "../../components/Select";
+import { currencyMask } from "../../helpers/currencyMask";
 
 registerLocale("pt-BR", ptBR);
 
@@ -39,19 +40,6 @@ function EditCharge({ idCharge, setIdCharge, setIsOpenCharge }) {
   const [reqError, setReqError] = useState("");
   const [reqSuccess, setReqSuccess] = useState("");
   const [isOpenAlert, setIsOpenAlert] = useState(false);
-
-  const currency = (valor) => {
-    console.log(valor)
-    let value = valor;
-    value = value.replace(/\D/g, "");
-    value = value.replace(/(\d)(\d{2})$/, "$1,$2");
-    value = value.replace(/(?=(\d{3})+(\D))\B/g, ".");
-    console.log("value", value);
-    
-    if (value.length === 0) return ''
-
-    return `R$ ${value}`;
-  };
 
   const handleOpenAlert = (status) => {
     setIsOpenAlert(status);
@@ -94,7 +82,6 @@ function EditCharge({ idCharge, setIdCharge, setIsOpenCharge }) {
   async function updateCharge(updateData) {
     let newValue = updateData.valor;
     newValue = newValue.replace(/R\$ /g, "");
-    console.log("newValue", newValue);
     const idCliente = clients
       .find((client) => client.name === charge.name)
       ?.id.toString();
@@ -104,7 +91,6 @@ function EditCharge({ idCharge, setIdCharge, setIsOpenCharge }) {
       clienteId: idCliente,
     };
 
-    console.log({ newUpdateData, updateData });
     try {
       setReqError("");
       setReqSuccess("");
@@ -250,9 +236,9 @@ function EditCharge({ idCharge, setIdCharge, setIsOpenCharge }) {
                       type="text"
                       {...register("valor", { required: true })}
                       placeholder="R$ 999.999,99"
-                      defaultValue={currency(charge.value)}
+                      defaultValue={currencyMask(charge.value)}
                       className="input-form width-mid"
-                      onChange={(e) => setValue("valor", currency(e.target.value))}
+                      onChange={(e) => setValue("valor", currencyMask(e.target.value))}
                     />
                   </div>
                   <div className="flex-column">

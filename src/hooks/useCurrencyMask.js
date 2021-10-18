@@ -3,7 +3,6 @@ import InputMask from 'inputmask';
 
 const useCurrencyMask = (register, options) => {
   const ref = useRef(null);
-console.log({ref, register, options})
   useEffect(() => {
     if (!ref.current && !register) return
 

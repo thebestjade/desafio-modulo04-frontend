@@ -38,7 +38,7 @@ export async function getClients(
     });
 
     const data = await response.json();
-
+    console.log(data)
     if (response.ok) {
       return setClients(data);
     }
@@ -54,10 +54,36 @@ function Client() {
   const { clients, setClients } = useContext(ClientsContext);
   const [reqError, setReqError] = useState("");
   const [idClient, setIdClient] = useState(null);
+  const [searchValue, setSearchValue] = useState("");
+  const [filteredItems, setFilteredItems] = useState([]);
   const [isOpenClient, setIsOpenClient] = useState(false);
   const [isOpenDetailClient, setIsOpenDetailClient] = useState(false);
   const { isOpenUser } = useContext(ModalContext);
 
+  const handleInputSearch = (e) => {
+    setSearchValue(e.target.value);
+  };
+
+  useEffect(() => {
+    if (searchValue.length === 0) {
+      setFilteredItems([]);
+    }
+  }, [searchValue]);
+
+  const handleSearch = () => {
+    if (clients.length > 0) {
+      const filteredData = clients.filter(
+        (item) =>
+          (!!item.name && item.name.toLowerCase().includes(searchValue)) ||
+          (!!item.email && item.email.toLowerCase().includes(searchValue)) ||
+          (!!item.phone &&
+            item.phone.replace(/[(|)|-]/g, "").includes(searchValue))
+      );
+      return setFilteredItems(filteredData);
+    } else {
+      setFilteredItems([]);
+    }
+  };
   const closeAlert = () => {
     setReqError("");
     setReqSuccess("");
@@ -107,7 +133,12 @@ function Client() {
             Adicionar Cliente
           </button>
 
-          <InputSearch className="align-end" />
+          <InputSearch
+            className="align-end"
+            value={searchValue}
+            onChange={handleInputSearch}
+            onClick={handleSearch}
+          />
         </div>
 
         <HeaderTable
@@ -119,10 +150,10 @@ function Client() {
             "",
           ]}
         />
-        {!!Object.keys(clients).length && (
+        {filteredItems.length > 0 ? (
           <div className="container-client flex-row">
             <div className="container-home flex-column overflow-scroll">
-              {clients.map((client) => (
+              {filteredItems.map((client) => (
                 <div>
                   <ContainerClient
                     id={client.id}
@@ -140,6 +171,29 @@ function Client() {
               ))}
             </div>
           </div>
+        ) : (
+          !!Object.keys(clients).length && (
+            <div className="container-client flex-row">
+              <div className="container-home flex-column overflow-scroll">
+                {clients.map((client) => (
+                  <div>
+                    <ContainerClient
+                      id={client.id}
+                      name={client.name}
+                      email={client.email}
+                      phone={client.phone}
+                      cpf={client.cpf}
+                      totalcharges={client.totalcharges}
+                      totalchargespaid={client.totalchargespaid}
+                      status={client.status}
+                      openDetailClient={() => handleOpenDetailClient(client.id)}
+                      openEditClient={() => handleOpenEditClient(client.id)}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )
         )}
         <div className="items-center mg-error">
           {reqError && (
