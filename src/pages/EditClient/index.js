@@ -6,6 +6,7 @@ import { Backdrop, CircularProgress } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import TokenContext from "../../contexts/token/TokenContext";
 import ButtonSubmit from "../../components/ButtonSubmit";
+import { getClients } from "../Clients/index";
 
 import "./styles.css";
 import "../Home/styles.css";
@@ -46,7 +47,13 @@ function EditClient({ idClient, setIdClient, setIsOpenClient }) {
       });
       return;
     }
-    setClients({...clients, public_place: logradouro, district: bairro, uf: uf, city: localidade})
+    setClients({
+      ...clients,
+      public_place: logradouro,
+      district: bairro,
+      uf: uf,
+      city: localidade,
+    });
     setCity(localidade);
     setDistrict(bairro);
     setStreet(logradouro);
@@ -123,7 +130,6 @@ function EditClient({ idClient, setIdClient, setIsOpenClient }) {
 
       if (response.ok) {
         setReqSuccess(data);
-        getClient();
         const timer = setTimeout(() => {
           handleCloseModal();
           clearTimeout(timer);

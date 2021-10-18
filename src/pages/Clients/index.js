@@ -19,7 +19,7 @@ import EditClient from "../EditClient";
 import DetailClient from "../DetailClient";
 import InputSearch from "../../components/InputSearch";
 
-export async function getClient(
+export async function getClients(
   token,
   setClients,
   setReqError,
@@ -38,13 +38,14 @@ export async function getClient(
     });
 
     const data = await response.json();
+    console.log(data)
 
     if (response.ok) {
       return setClients(data);
     }
     setReqError(data);
   } catch (error) {
-    setReqError(error);
+    return setReqError(error.message);
   }
 }
 
@@ -74,7 +75,7 @@ function Client() {
   };
 
   useEffect(() => {
-    getClient(token, setClients, setReqError);
+    getClients(token, setClients, setReqError);
   }, []);
 
   return (

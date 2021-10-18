@@ -15,7 +15,7 @@ import ContainerClient from "../../components/ContainerClient";
 import "./styles.css";
 import Breadcrumb from "./Breadcrumb";
 import ChargesContext from "../../contexts/charge/ChargesContexts";
-import { getClient } from "../Clients";
+import { getClients } from "../Clients";
 import { getCharges } from "../Charges";
 
 function Report() {
@@ -92,7 +92,7 @@ function Report() {
       const url = `https://desafio04-backend.herokuapp.com/${entity}?status=${status}`;
       try {
         entity === "clientes"
-          ? getClient(
+          ? getClients(
               token,
               setClients,
               setReqError,
@@ -184,7 +184,7 @@ function Report() {
       entity === "cobrancas" &&
       isOpenCharge &&
       idCharge &&
-      getClient(token, setClients, setReqError),
+      getClients(token, setClients, setReqError),
     [entity, idCharge, isOpenCharge, setClients, token]
   );
 

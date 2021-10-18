@@ -58,6 +58,7 @@ function DetailClient({
   const closeAlert = () => {
     setReqError("");
   };
+  useEffect(() => console.log("reqError", reqError), [reqError]);
 
   return (
     <div className="container-form flex-column modal-form">
@@ -72,9 +73,15 @@ function DetailClient({
           <div>
             <div className="client-content-header pd-bt-mid">
               <h2 className="detail-name">{clients.name}</h2>
-              <div>{clients.cpf && (clients.cpf).replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4")}</div>
+              <div>
+                {clients.cpf &&
+                  clients.cpf.replace(
+                    /(\d{3})(\d{3})(\d{3})(\d{2})/,
+                    "$1.$2.$3-$4"
+                  )}
+              </div>
             </div>
-            <div className='detail-info'>
+            <div className="detail-info">
               <ul className="client-content-body pd-bt-mid flex-row items-center">
                 <li className="flex-row items-center">
                   <IconMessage />
@@ -82,7 +89,11 @@ function DetailClient({
                 </li>
                 <li className="flex-row items-center">
                   <IconPhone />
-                  {clients.phone && (clients.phone).replace(/^(\d\d)(\d{5})(\d{4}).*/, "($1) $2-$3")}
+                  {clients.phone &&
+                    clients.phone.replace(
+                      /^(\d\d)(\d{5})(\d{4}).*/,
+                      "($1) $2-$3"
+                    )}
                 </li>
               </ul>
             </div>
@@ -117,7 +128,9 @@ function DetailClient({
             <div className="pd-bt-mid">
               <ul className="client-content flex-row pd-zero">
                 <li>
-                  <h4 className="label-content-detail pd-right-xlg">COMPLEMENTO</h4>
+                  <h4 className="label-content-detail pd-right-xlg">
+                    COMPLEMENTO
+                  </h4>
                   <div className="detail-width-md flex-row">
                     {clients.complement}
                   </div>
@@ -130,52 +143,62 @@ function DetailClient({
             </div>
           </div>
           <div className="charges-content">
-            <li className="pd-right-sm detail-width-lg">
-              {charges.map(({ id, description, due_date, value, status }) => (
-                <div className="container-charges-detail flex-row">
-                  <div className="flex-column widht-container">
-                    <span className="flex-row items-center">
-                      <h4 className="pd-right-sm">#{id}</h4>
-                      {description}
-                    </span>
-                    <span className="detail-date ">
-                      {Intl.DateTimeFormat("pt-br", {
-                        year: "numeric",
-                        month: "numeric",
-                        day: "numeric",
-                      }).format(new Date(due_date))}
-                    </span>
-                  </div>
-                  <div className="flex-column align-items-end">
-                    <h5 className="detail-value">
-                      {Intl.NumberFormat("pt-BR", {
-                        style: "currency",
-                        currency: "BRL",
-                      }).format(value)}
-                    </h5>
-                    <span
-                      className="status"
-                      style={
-                        status.toUpperCase() === "PAGO"
-                          ? { color: "#4EC06E" }
-                          : status.toUpperCase() === "PENDENTE"
+            {charges.length > 0 ? (
+              <li className="pd-right-sm detail-width-lg">
+                {charges.map(({ id, description, due_date, value, status }) => (
+                  <div className="container-charges-detail flex-row">
+                    <div className="flex-column widht-container">
+                      <span className="flex-row items-center">
+                        <h4 className="pd-right-sm">#{id}</h4>
+                        {description}
+                      </span>
+                      <span className="detail-date ">
+                        {Intl.DateTimeFormat("pt-br", {
+                          year: "numeric",
+                          month: "numeric",
+                          day: "numeric",
+                        }).format(new Date(due_date))}
+                      </span>
+                    </div>
+                    <div className="flex-column align-items-end">
+                      <h5 className="detail-value">
+                        {Intl.NumberFormat("pt-BR", {
+                          style: "currency",
+                          currency: "BRL",
+                        }).format(value)}
+                      </h5>
+                      <span
+                        className="status"
+                        style={
+                          status.toUpperCase() === "PAGO"
+                            ? { color: "#4EC06E" }
+                            : status.toUpperCase() === "PENDENTE"
                             ? { color: "#5197B5" }
                             : { color: "#FF4D4D" }
-                      }
-                    >
-                      {status}
-                    </span>
+                        }
+                      >
+                        {status}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </li>
+                ))}
+              </li>
+            ) : (
+              <div className="items-center mg-error">
+                {charges.length === 0 && (
+                  <Alert severity="error" onClose={closeAlert}>
+                    O cliente não possui cobranças cadastradas
+                  </Alert>
+                )}
+              </div>
+            )}
           </div>
+          {reqError && (
+            <Alert severity="error" onClose={closeAlert}>
+              {reqError}
+            </Alert>
+          )}
         </div>
-        {reqError && (
-          <Alert severity="error" onClose={closeAlert}>
-            {reqError}
-          </Alert>
-        )}
       </form>
     </div>
   );

@@ -14,7 +14,7 @@ import ClientsContext from "../../contexts/client/ClientsContext";
 import { useState } from "react";
 import EditCharge from "../EditCharge";
 import InputSearch from "../../components/InputSearch";
-import { getClient } from "../Clients";
+import { getClients } from "../Clients/index";
 
 export async function getCharges(token, setCharges, setReqError, urlToFetch = null) {
   setReqError("");
@@ -31,13 +31,13 @@ export async function getCharges(token, setCharges, setReqError, urlToFetch = nu
       }
     );
 
-    const charges = await response.json();
+    const data = await response.json();
 
     if (response.ok) {
-      return setCharges(charges);
+      return setCharges(data);
     }
 
-    setReqError(charges);
+    setReqError(data);
   } catch (error) {
     setReqError(error);
   }
@@ -59,7 +59,9 @@ function Charges() {
 
   useEffect(() => {
     getCharges(token, setCharges, setReqError);
-    getClient(token, setClients, setReqError);
+    if(isOpenCharge && idCharge){
+      getClients(token, setClients, setReqError);
+    }
     // eslint-disable-next-line
   }, [token, setCharges]);
 

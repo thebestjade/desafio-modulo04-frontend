@@ -14,11 +14,13 @@ import "./styles.css";
 import "../../styles/form.css";
 import useStyles from "../../styles/useStyles";
 import TokenContext from "../../contexts/token/TokenContext";
-import ClientsContext from "../../contexts/client/ClientsContext";
 import ChargesContext from "../../contexts/charge/ChargesContexts";
 import IconTrash from "../../assets/IconTrash";
 import AlertRemove from "../../components/AlertRemove";
 import { getCharges } from "../Charges";
+import useCurrencyMask from "../../hooks/useCurrencyMask";
+import { getClients } from "../Clients/index";
+import Select from "../../components/Select";
 
 registerLocale("pt-BR", ptBR);
 
@@ -54,14 +56,15 @@ function EditCharge({ idCharge, setIdCharge, setIsOpenCharge }) {
     formState: { isValid },
   } = useForm({ mode: "onChange" });
   const { token } = useContext(TokenContext);
-  const { clients } = useContext(ClientsContext);
+  const [clients, setClients] = useState([]);
   const { setCharges } = useContext(ChargesContext);
   const [charge, setCharge] = useState({});
   const [loading, setLoading] = useState(false);
   const [reqError, setReqError] = useState("");
   const [reqSuccess, setReqSuccess] = useState("");
   const [isOpenAlert, setIsOpenAlert] = useState(false);
-
+  // const currencyFormat = {prefix: 'R$', radixPoint: ',', groupSeparator: '.', required: true}
+  // const currency = useCurrencyMask(register, currencyFormat)
   const handleOpenAlert = (status) => {
     setIsOpenAlert(status);
   };
@@ -76,6 +79,7 @@ function EditCharge({ idCharge, setIdCharge, setIsOpenCharge }) {
   };
 
   async function getCharge() {
+    setLoading(true);
     setReqError("");
 
     const response = await fetch(
@@ -91,17 +95,26 @@ function EditCharge({ idCharge, setIdCharge, setIsOpenCharge }) {
     const data = await response.json();
 
     if (response.ok) {
+      getClients(token, setClients, setReqError);
+      setLoading(false);
       return setCharge(data);
     }
     setReqError(data);
+    setLoading(false);
   }
 
   async function updateCharge(updateData) {
     const newValue = Number(updateData.valor.replace(/\D/g, ""));
-    const newUpdateData = { ...updateData, valor: newValue.toString() };
+    const idCliente = clients
+      .find((client) => client.name === charge.name)
+      ?.id.toString();
+    const newUpdateData = {
+      ...updateData,
+      valor: newValue.toString(),
+      clienteId: idCliente,
+    };
 
     try {
-      setLoading(true);
       setReqError("");
       setReqSuccess("");
 
@@ -121,8 +134,6 @@ function EditCharge({ idCharge, setIdCharge, setIsOpenCharge }) {
       );
 
       const data = await response.json();
-
-      setLoading(false);
 
       if (response.ok) {
         setReqSuccess(data);
@@ -175,13 +186,15 @@ function EditCharge({ idCharge, setIdCharge, setIsOpenCharge }) {
     }
   }
   useEffect(() => {
-    getCharge();
+    if (idCharge) {
+      getCharge();
+    }
     // eslint-disable-next-line
   }, []);
 
   return (
     <div>
-      {!!Object.keys(charge).length && (
+      {!loading && !!Object.keys(charge).length && (
         <>
           <div className="container-form flex-column modal-form padding-form-edit">
             <form
@@ -201,19 +214,18 @@ function EditCharge({ idCharge, setIdCharge, setIsOpenCharge }) {
               </button>
               <div className="flex-column  content-center items-center">
                 <div className="flex-column">
-                  <label htmlFor="clienteId">Cliente</label>
-                  <select
-                    className="input-form width-lg mb-md"
-                    id="clienteId"
-                    defaultValue={charge.name}
-                    {...register("clienteId", { required: true })}
-                  >
-                    {clients.map(({ id, name }) => (
-                      <option key={id} value={id}>
-                        {name}
-                      </option>
-                    ))}
-                  </select>
+                  {clients.length > 0 && (
+                    <>
+                      <label htmlFor="clienteId">Cliente</label>
+                      <Select
+                        register={register}
+                        className="input-form width-lg mb-md"
+                        name="clienteId"
+                        defaultValue={charge.name}
+                        options={clients}
+                      />
+                    </>
+                  )}
                 </div>
                 <div className="flex-column">
                   <label htmlFor="descricao">Descrição</label>
@@ -236,20 +248,22 @@ function EditCharge({ idCharge, setIdCharge, setIsOpenCharge }) {
                     id="status"
                     {...register("status", { required: true })}
                   >
-                    <option>Pendente</option>
-                    <option>Pago</option>
-                    <option selected>Selecione um status</option>
+                    <option value="pendente">Pendente</option>
+                    <option value="pago">Pago</option>
                   </select>
                 </div>
                 <div className="flex-row form-gap">
                   <div className="flex-column">
                     <label htmlFor="valor">Valor</label>
+
                     <Controller
                       control={control}
                       id="valor"
                       defaultValue={charge.value}
                       {...register("valor", { required: true })}
+                      // ref={currency}
                       render={({ field }) => (
+                        // <input inputMode="numeric" name="valor" id="valor"  defaultValue={charge.value} {...register("valor", { required: true })}/>
                         <CurrencyInput
                           onChange={(value) => field.onChange(value)}
                           value={field.value}
