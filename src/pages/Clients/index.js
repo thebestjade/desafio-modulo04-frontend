@@ -19,26 +19,33 @@ import EditClient from "../EditClient";
 import DetailClient from "../DetailClient";
 import InputSearch from "../../components/InputSearch";
 
-export async function getClient(token, setClients, setReqError) {
+export async function getClient(
+  token,
+  setClients,
+  setReqError,
+  urlToFetch = null
+) {
   setReqError("");
+  const url = urlToFetch || "https://desafio04-backend.herokuapp.com/clientes";
 
-  const response = await fetch(
-    "https://desafio04-backend.herokuapp.com/clientes",
-    {
+  try {
+    const response = await fetch(url, {
       headers: {
         "Content-type": "application/json",
         mode: "cors",
         Authorization: token,
       },
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      return setClients(data);
     }
-  );
-
-  const data = await response.json();
-
-  if (response.ok) {
-    return setClients(data);
+    setReqError(data);
+  } catch (error) {
+    setReqError(error);
   }
-  setReqError(data);
 }
 
 function Client() {

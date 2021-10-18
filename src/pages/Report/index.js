@@ -16,11 +16,12 @@ import "./styles.css";
 import Breadcrumb from "./Breadcrumb";
 import ChargesContext from "../../contexts/charge/ChargesContexts";
 import { getClient } from "../Clients";
+import { getCharges } from "../Charges";
 
 function Report() {
   const { token } = useContext(TokenContext);
-  const { clients, setClients } = useContext(ClientsContext);
-  const { charges, setCharges } = useContext(ChargesContext);
+  const [clients, setClients] = useState([]);
+  const [charges, setCharges] = useState([]);
   const { entity, status } = useContext(ReportContext);
 
   const [reqError, setReqError] = useState("");
@@ -88,32 +89,22 @@ function Report() {
     async function getData() {
       setReqError("");
       setLoading(true);
-
+      const url = `https://desafio04-backend.herokuapp.com/${entity}?status=${status}`;
       try {
-        const response = await fetch(
-          `https://desafio04-backend.herokuapp.com/${entity}?status=${status}`,
-          {
-            headers: {
-              "Content-type": "application/json",
-              mode: "cors",
-              Authorization: token,
-            },
-          }
-        );
-
-        const data = await response.json();
+        entity === "clientes"
+          ? getClient(
+              token,
+              setClients,
+              setReqError,
+              url
+            )
+          : getCharges(
+              token,
+              setCharges,
+              setReqError,
+              url
+            );
         setLoading(false);
-        if (response.ok) {
-          if (data.length === 0) {
-            const err =
-              entity === "clientes"
-                ? `Nenhum cliente encontrado com o status ${status}.`
-                : `Nenhuma cobrança encontrada com o status ${status}.`;
-            return setReqError(err);
-          }
-          return entity === "clientes" ? setClients(data) : setCharges(data);
-        }
-        setReqError(data);
       } catch (error) {
         setLoading(false);
         setReqError(error);
@@ -125,7 +116,7 @@ function Report() {
       setClients([]);
     };
     // eslint-disable-next-line
-  }, [entity, status, token]);
+  }, [entity, status, token, isOpenCharge]);
 
   useEffect(() => {
     const handleDataToShow = () => {
@@ -142,7 +133,7 @@ function Report() {
     handleDataToShow();
   }, [charges, clients, status]);
 
-  useEffect(() => console.log('dataToShow',dataToShow), [dataToShow])
+  useEffect(() => console.log("dataToShow", dataToShow), [dataToShow]);
   const RenderItems = () => {
     return entity === "clientes"
       ? clients.map((client) => (
@@ -188,7 +179,14 @@ function Report() {
           </button>
         ));
   };
-  useEffect(() => entity === "cobrancas" && isOpenCharge && idCharge && getClient(token, setClients, setReqError), [entity, idCharge, isOpenCharge, setClients, token])
+  useEffect(
+    () =>
+      entity === "cobrancas" &&
+      isOpenCharge &&
+      idCharge &&
+      getClient(token, setClients, setReqError),
+    [entity, idCharge, isOpenCharge, setClients, token]
+  );
 
   return (
     <div className="container-client flex-row">
@@ -223,7 +221,9 @@ function Report() {
               "Vencimento",
             ]}
           />
-          {(clients.length > 0 || charges.length > 0) && loading === false && <RenderItems />}
+          {(clients.length > 0 || charges.length > 0) && loading === false && (
+            <RenderItems />
+          )}
           <div className="items-center mg-error">
             {reqError && (
               <Alert severity="error" onClose={closeAlert}>

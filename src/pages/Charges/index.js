@@ -16,27 +16,31 @@ import EditCharge from "../EditCharge";
 import InputSearch from "../../components/InputSearch";
 import { getClient } from "../Clients";
 
-export async function getCharges(token, setCharges, setReqError) {
+export async function getCharges(token, setCharges, setReqError, urlToFetch = null) {
   setReqError("");
+  const url = urlToFetch || "https://desafio04-backend.herokuapp.com/cobrancas";
+  try {
+    const response = await fetch(
+      url,
+      {
+        headers: {
+          "Content-type": "application/json",
+          mode: "cors",
+          Authorization: token,
+        },
+      }
+    );
 
-  const response = await fetch(
-    "https://desafio04-backend.herokuapp.com/cobrancas",
-    {
-      headers: {
-        "Content-type": "application/json",
-        mode: "cors",
-        Authorization: token,
-      },
+    const charges = await response.json();
+
+    if (response.ok) {
+      return setCharges(charges);
     }
-  );
 
-  const charges = await response.json();
-
-  if (response.ok) {
-    return setCharges(charges);
+    setReqError(charges);
+  } catch (error) {
+    setReqError(error);
   }
-
-  setReqError(charges);
 }
 
 function Charges() {
