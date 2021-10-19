@@ -25,8 +25,6 @@ function Report() {
   const { entity, status } = useContext(ReportContext);
   const { charges, setCharges } = useContext(ChargesContext);
   const { clients, setClients } = useContext(ClientsContext);
-  const [localClients, setLocalClients] = useState([]);
-  const [localCharges, setLocalCharges] = useState([]);
 
   const [reqError, setReqError] = useState("");
   const { isOpenUser } = useContext(ModalContext);
@@ -206,14 +204,14 @@ function Report() {
         ));
   };
 
-  useEffect(
-    () =>
-      entity === "cobrancas" &&
-      isOpenCharge &&
-      idCharge &&
-      getClients(token, setLocalClients, setReqError),
-    [entity, idCharge, isOpenCharge, setLocalClients, token]
-  );
+  // useEffect(
+  //   () =>
+  //     entity === "cobrancas" &&
+  //     isOpenCharge &&
+  //     idCharge &&
+  //     getClients(token, setLocalClients, setReqError),
+  //   [entity, idCharge, isOpenCharge, setLocalClients, token]
+  // );
 
   return (
     <div className="container-client flex-row">

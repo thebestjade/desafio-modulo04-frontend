@@ -17,7 +17,6 @@ import IconTrash from "../../assets/IconTrash";
 import AlertRemove from "../../components/AlertRemove";
 import { getCharges } from "../Charges";
 import { getClients } from "../Clients/index";
-import Select from "../../components/Select";
 import { currencyMask } from "../../helpers/currencyMask";
 
 registerLocale("pt-BR", ptBR);
