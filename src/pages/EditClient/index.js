@@ -13,6 +13,7 @@ import "../Home/styles.css";
 import useStyles from "../../styles/useStyles";
 import getCityByCep from "../../services/viaCep";
 import { toast } from "react-toastify";
+import ClientsContext from "../../contexts/client/ClientsContext";
 
 function EditClient({ idClient, setIdClient, setIsOpenClient }) {
   const classes = useStyles();
@@ -24,7 +25,8 @@ function EditClient({ idClient, setIdClient, setIsOpenClient }) {
   } = useForm({ mode: "onChange" });
 
   const { token } = useContext(TokenContext);
-  const [clients, setClients] = useState({});
+  const { setClients } = useContext(ClientsContext);
+  const [client, setClient] = useState({});
   const [loading, setLoading] = useState(false);
   const [reqError, setReqError] = useState("");
   const [reqSuccess, setReqSuccess] = useState("");
@@ -47,8 +49,8 @@ function EditClient({ idClient, setIdClient, setIsOpenClient }) {
       });
       return;
     }
-    setClients({
-      ...clients,
+    setClient({
+      ...client,
       public_place: logradouro,
       district: bairro,
       uf: uf,
@@ -61,14 +63,14 @@ function EditClient({ idClient, setIdClient, setIsOpenClient }) {
   }
 
   const handleSearchCep = (cep) => {
-    if (Object.keys(clients).length > 0 && !!cep) {
+    if (Object.keys(client).length > 0 && !!cep) {
       if (cep.indexOf("-") !== -1) {
         const cepToSearch = cep.replace(/\D/g, "");
         if (cepToSearch.length === 8) {
           loadCityByCep(cepToSearch);
         }
       } else {
-        if (clients.length === 8) {
+        if (client.length === 8) {
           loadCityByCep(cep);
         }
       }
@@ -91,7 +93,7 @@ function EditClient({ idClient, setIdClient, setIsOpenClient }) {
     const data = await response.json();
 
     if (response.ok) {
-      return setClients(data.client);
+      return setClient(data.client);
     }
     setReqError(data);
   }
@@ -130,6 +132,7 @@ function EditClient({ idClient, setIdClient, setIsOpenClient }) {
 
       if (response.ok) {
         setReqSuccess(data);
+        getClients(token, setClients, setReqError)
         const timer = setTimeout(() => {
           handleCloseModal();
           clearTimeout(timer);
@@ -157,7 +160,7 @@ function EditClient({ idClient, setIdClient, setIsOpenClient }) {
 
   return (
     <div>
-      {!!Object.keys(clients).length && (
+      {!!Object.keys(client).length && (
         <>
           <div className="container-form flex-column modal-form padding-form-edit">
             <form
@@ -181,7 +184,7 @@ function EditClient({ idClient, setIdClient, setIsOpenClient }) {
                     className="input-form width-lg"
                     id="name"
                     type="text"
-                    defaultValue={clients.name}
+                    defaultValue={client.name}
                     {...register("nome", { required: true })}
                   />
                 </div>
@@ -191,7 +194,7 @@ function EditClient({ idClient, setIdClient, setIsOpenClient }) {
                     className="input-form width-lg"
                     id="email"
                     type="text"
-                    defaultValue={clients.email}
+                    defaultValue={client.email}
                     {...register("email", { required: true })}
                   />
                 </div>
@@ -201,7 +204,7 @@ function EditClient({ idClient, setIdClient, setIsOpenClient }) {
                     <InputMask
                       className="input-form"
                       mask="999.999.999-99"
-                      defaultValue={clients.cpf}
+                      defaultValue={client.cpf}
                       {...register("cpf", {
                         reguired: true,
                         pattern: /(\d{3}.){2}\d{3}-\d{2}/g,
@@ -217,7 +220,7 @@ function EditClient({ idClient, setIdClient, setIsOpenClient }) {
                     <InputMask
                       className="input-form"
                       mask="(99)99999-9999"
-                      defaultValue={clients.phone}
+                      defaultValue={client.phone}
                       {...register("telefone", {
                         required: true,
                         pattern: /\([0-9]{2}\)[0-9]{4,5}-[0-9]{4}/g,
@@ -235,7 +238,7 @@ function EditClient({ idClient, setIdClient, setIsOpenClient }) {
                     <InputMask
                       className="input-form"
                       mask="99999-999"
-                      defaultValue={clients.cep}
+                      defaultValue={client.cep}
                       {...register("cep", {
                         onChange: (e) => handleSearchCep(e.target.value),
                       })}
@@ -248,7 +251,7 @@ function EditClient({ idClient, setIdClient, setIsOpenClient }) {
                   <div className="flex-column">
                     <label htmlFor="street">Logradouro</label>
                     <input
-                      defaultValue={clients.public_place}
+                      defaultValue={client.public_place}
                       className="input-form width-mid"
                       id="street"
                       type="text"
@@ -263,7 +266,7 @@ function EditClient({ idClient, setIdClient, setIsOpenClient }) {
                   <div className="flex-column">
                     <label htmlFor="local">Bairro</label>
                     <input
-                      defaultValue={clients.district}
+                      defaultValue={client.district}
                       className="input-form width-mid"
                       id="local"
                       type="text"
@@ -276,7 +279,7 @@ function EditClient({ idClient, setIdClient, setIsOpenClient }) {
                   <div className="flex-column">
                     <label htmlFor="city">Cidade</label>
                     <input
-                      defaultValue={clients.city}
+                      defaultValue={client.city}
                       className="input-form width-mid"
                       id="city"
                       type="text"
@@ -291,7 +294,7 @@ function EditClient({ idClient, setIdClient, setIsOpenClient }) {
                   <div className="flex-column">
                     <label htmlFor="complete">Complemento</label>
                     <input
-                      defaultValue={clients.complement}
+                      defaultValue={client.complement}
                       className="input-form width-mid"
                       id="complete"
                       type="text"
@@ -304,7 +307,7 @@ function EditClient({ idClient, setIdClient, setIsOpenClient }) {
                       className="input-form  width-mid"
                       id="estado"
                       type="text"
-                      defaultValue={clients.uf}
+                      defaultValue={client.uf}
                       // value={state}
                       {...register("estado", {
                         onChange: (e) => setState(e.target.value),

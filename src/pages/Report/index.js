@@ -15,12 +15,18 @@ import "./styles.css";
 import Breadcrumb from "./Breadcrumb";
 import { getClients } from "../Clients";
 import { getCharges } from "../Charges";
+import EditClient from "../EditClient";
+import DetailClient from "../DetailClient";
+import ClientsContext from "../../contexts/client/ClientsContext";
+import ChargesContext from "../../contexts/charge/ChargesContexts";
 
 function Report() {
   const { token } = useContext(TokenContext);
-  const [clients, setClients] = useState([]);
-  const [charges, setCharges] = useState([]);
   const { entity, status } = useContext(ReportContext);
+  const { charges, setCharges } = useContext(ChargesContext);
+  const { clients, setClients } = useContext(ClientsContext);
+  const [localClients, setLocalClients] = useState([]);
+  const [localCharges, setLocalCharges] = useState([]);
 
   const [reqError, setReqError] = useState("");
   const { isOpenUser } = useContext(ModalContext);
@@ -109,7 +115,7 @@ function Report() {
       setClients([]);
     };
     // eslint-disable-next-line
-  }, [entity, status, token, isOpenCharge]);
+  }, [entity, status, token]);
 
   const RenderItems = () => {
     return entity === "clientes"
@@ -208,13 +214,27 @@ function Report() {
       entity === "cobrancas" &&
       isOpenCharge &&
       idCharge &&
-      getClients(token, setClients, setReqError),
-    [entity, idCharge, isOpenCharge, setClients, token]
+      getClients(token, setLocalClients, setReqError),
+    [entity, idCharge, isOpenCharge, setLocalClients, token]
   );
 
   return (
     <div className="container-client flex-row">
       {isOpenUser && <EditUser />}
+      {isOpenClient && idClient && (
+        <EditClient
+          idClient={idClient}
+          setIdClient={setIdClient}
+          setIsOpenClient={setIsOpenClient}
+        />
+      )}
+      {isOpenDetailClient && idClient && (
+        <DetailClient
+          idClient={idClient}
+          setIdClient={setIdClient}
+          setIsOpenDetailClient={setIsOpenDetailClient}
+        />
+      )}
       {isOpenCharge && idCharge && (
         <EditCharge
           idCharge={idCharge}

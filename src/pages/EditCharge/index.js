@@ -83,8 +83,8 @@ function EditCharge({ idCharge, setIdCharge, setIsOpenCharge }) {
     let newValue = updateData.valor;
     newValue = newValue.replace(/R\$ /g, "");
     const idCliente = clients
-      .find((client) => client.name === charge.name)
-      ?.id.toString();
+    .find((client) => client.name === updateData.clienteId)
+    ?.id.toString();
     const newUpdateData = {
       ...updateData,
       valor: newValue,
@@ -130,7 +130,6 @@ function EditCharge({ idCharge, setIdCharge, setIsOpenCharge }) {
 
   async function deleteCharge(idCharge) {
     try {
-      setLoading(true);
       setReqError("");
       setReqSuccess("");
       const response = await fetch(
@@ -148,8 +147,8 @@ function EditCharge({ idCharge, setIdCharge, setIsOpenCharge }) {
       setLoading(false);
 
       if (response.ok) {
-        setReqSuccess(data);
         getCharges(token, setCharges, setReqError);
+        setReqSuccess(data);
         const timer = setTimeout(() => {
           handleCloseModal();
           clearTimeout(timer);
@@ -194,13 +193,41 @@ function EditCharge({ idCharge, setIdCharge, setIsOpenCharge }) {
                   {clients.length > 0 && (
                     <>
                       <label htmlFor="clienteId">Cliente</label>
-                      <Select
+                      <Controller
+                      control={control}
+                      id="clienteId"
+                      defaultValue={charge.name}
+                      {...register("clienteId", { required: true })}
+                      render={({ field }) => (
+                        <select
+                        className="input-form width-lg mb-md"
+                        selected={field.value}
+                        onChange={(clientId) => field.onChange(clientId)}
+                        // defaultValue={charge.name}
+                        {...register("clienteId", { required: true })}
+                      >
+                        {clients.map(({ id, name }) => (
+                          <option value={name} key={id}>{name}</option>
+                        ))}
+                        {/* <option>Selecione o cliente</option> */}
+                      </select>
+                        // <ReactDatePicker
+                        //   className="input-form"
+                          
+                        //   selected={field.value}
+                        //   locale="pt-BR"
+                        //   dateFormat="dd 'de' MMMM 'de' yyyy"
+                        // />
+                      )}
+                    />
+                      
+                      {/* <Select
                         register={register}
                         className="input-form width-lg mb-md"
                         name="clienteId"
                         defaultValue={charge.name}
                         options={clients}
-                      />
+                      /> */}
                     </>
                   )}
                 </div>
@@ -238,7 +265,9 @@ function EditCharge({ idCharge, setIdCharge, setIsOpenCharge }) {
                       placeholder="R$ 999.999,99"
                       defaultValue={currencyMask(charge.value)}
                       className="input-form width-mid"
-                      onChange={(e) => setValue("valor", currencyMask(e.target.value))}
+                      onChange={(e) =>
+                        setValue("valor", currencyMask(e.target.value))
+                      }
                     />
                   </div>
                   <div className="flex-column">
