@@ -47,6 +47,7 @@ function Home() {
       }
     }
     getHomeInfo();
+    // eslint-disable-next-line
   }, []);
   const closeAlert = () => {
     setReqError("");
