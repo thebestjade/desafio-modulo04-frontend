@@ -120,11 +120,8 @@ function Report() {
   const RenderItems = () => {
     return entity === "clientes"
       ? clients.map((client) => (
-          <button
+          <div
             key={client.id}
-            className="button-appearance-none"
-            type="button"
-            onClick={() => handleOpenEditCharge(client.id)}
           >
             <ContainerClient
               id={client.id}
@@ -138,7 +135,7 @@ function Report() {
               openDetailClient={() => handleOpenDetailClient(client.id)}
               openEditClient={() => handleOpenEditClient(client.id)}
             />
-          </button>
+          </div>
         ))
       : charges.map((charge) => (
           <button
@@ -245,7 +242,7 @@ function Report() {
       <SideBar />
       <div className=" container-home flex-column overflow-scroll">
         <ButtonProfile />
-        <div className="container-charge ">
+        <div className= {entity === 'cobrancas' ? "container-charge" : "client report"}>
           <div className="flex-row align-baseline space-between">
             <Breadcrumb />
             <InputSearch
@@ -256,16 +253,27 @@ function Report() {
               onClick={handleSearch}
             />
           </div>
-          <HeaderTable
-            titles={[
-              "ID",
-              "Cliente",
-              "Descrição",
-              "Valor",
-              "Status",
-              "Vencimento",
-            ]}
-          />
+          {entity === 'cobrancas' ?
+            <HeaderTable
+              titles={[
+                "ID",
+                "Cliente",
+                "Descrição",
+                "Valor",
+                "Status",
+                "Vencimento",
+              ]} />
+              :
+              <HeaderTable
+              titles={[
+                "Cliente",
+                "Cobranças feitas",
+                "Cobranças recebidas",
+                "Status",
+                "",
+
+              ]}/>
+          }
           {filteredItems.length > 0 ? (
             <RenderFilteredItems />
           ) : (
