@@ -1,0 +1,17 @@
+.modal-path {
+    width: auto;
+    height: auto;
+    left: 336px;
+    top: 187px;
+    background: #F8F8F8;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
+    border-radius: 3px;
+    padding: 20px;
+}
+
+.modal-path span {
+    font-family: Montserrat;
+    font-size: 14px;
+    line-height: 17px;
+    text-transform: capitalize;
+}
